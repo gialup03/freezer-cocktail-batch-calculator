@@ -18,13 +18,8 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG, suga
 
   return (
     <div className="overflow-x-auto">
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4">
         <h2 className="text-2xl font-semibold text-slate-900">Batch Breakdown</h2>
-        {columnVisibility.sugar && sugarGPerL !== undefined && sugarGPerL > 0 && (
-          <div className="text-sm text-slate-600">
-            Final sugar concentration: <span className="font-semibold text-slate-900">{sugarGPerL.toFixed(1)} g/L</span>
-          </div>
-        )}
       </div>
       
       <table className="w-full border-collapse">
@@ -48,28 +43,28 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG, suga
               className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}
             >
               <td className="py-3 px-4 border-b border-slate-200">{calc.ingredient.name || 'Unnamed'}</td>
-              <td className="text-right py-3 px-4 border-b border-slate-200">{calc.volumeMl.toFixed(1)}</td>
+              <td className="text-right py-3 px-4 border-b border-slate-200">{calc.volumeMl.toFixed(0)}</td>
               <td className="text-right py-3 px-4 border-b border-slate-200">{calc.volumeOz.toFixed(2)}</td>
               {columnVisibility.weight && (
-                <td className="text-right py-3 px-4 border-b border-slate-200">{calc.weightG.toFixed(1)}</td>
+                <td className="text-right py-3 px-4 border-b border-slate-200">{calc.weightG.toFixed(0)}</td>
               )}
               {columnVisibility.sugar && (
                 <td className="text-right py-3 px-4 border-b border-slate-200">
-                  {calc.sugarG !== undefined ? calc.sugarG.toFixed(1) : '-'}
+                  {calc.sugarG !== undefined ? calc.sugarG.toFixed(0) : '-'}
                 </td>
               )}
             </tr>
           ))}
           <tr className="bg-slate-100 font-semibold">
             <td className="py-3 px-4 border-t-2 border-slate-300">Total</td>
-            <td className="text-right py-3 px-4 border-t-2 border-slate-300">{totalVolumeMl.toFixed(1)}</td>
+            <td className="text-right py-3 px-4 border-t-2 border-slate-300">{totalVolumeMl.toFixed(0)}</td>
             <td className="text-right py-3 px-4 border-t-2 border-slate-300">{totalVolumeOz.toFixed(2)}</td>
             {columnVisibility.weight && (
-              <td className="text-right py-3 px-4 border-t-2 border-slate-300">{totalWeightG.toFixed(1)}</td>
+              <td className="text-right py-3 px-4 border-t-2 border-slate-300">{totalWeightG.toFixed(0)}</td>
             )}
             {columnVisibility.sugar && (
               <td className="text-right py-3 px-4 border-t-2 border-slate-300">
-                {totalSugarG !== undefined ? totalSugarG.toFixed(1) : '-'}
+                {totalSugarG !== undefined ? totalSugarG.toFixed(0) : '-'}
               </td>
             )}
           </tr>

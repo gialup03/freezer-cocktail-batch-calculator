@@ -57,7 +57,11 @@ function App() {
             </section>
             
             <section className="mb-8">
-              <AbvBadge abv={result.finalAbv} />
+              <AbvBadge 
+                abv={result.finalAbv} 
+                sugarGPerL={result.sugarGPerL}
+                showSugar={columnVisibility.sugar}
+              />
             </section>
             
             <section className="mb-8">
