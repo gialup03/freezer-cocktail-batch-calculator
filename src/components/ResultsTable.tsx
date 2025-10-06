@@ -12,6 +12,8 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG, suga
     return null;
   }
 
+  const roundToQuarterOz = (oz: number) => Math.round(oz / 0.25) * 0.25;
+
   const totalVolumeMl = calculations.reduce((sum, calc) => sum + calc.volumeMl, 0);
   const totalVolumeOz = calculations.reduce((sum, calc) => sum + calc.volumeOz, 0);
   const totalWeightG = calculations.reduce((sum, calc) => sum + calc.weightG, 0);
@@ -44,7 +46,7 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG, suga
             >
               <td className="py-3 px-4 border-b border-slate-200">{calc.ingredient.name || 'Unnamed'}</td>
               <td className="text-right py-3 px-4 border-b border-slate-200">{calc.volumeMl.toFixed(0)}</td>
-              <td className="text-right py-3 px-4 border-b border-slate-200">{calc.volumeOz.toFixed(2)}</td>
+              <td className="text-right py-3 px-4 border-b border-slate-200">{roundToQuarterOz(calc.volumeOz).toFixed(2)}</td>
               {columnVisibility.weight && (
                 <td className="text-right py-3 px-4 border-b border-slate-200">{calc.weightG.toFixed(0)}</td>
               )}
@@ -58,7 +60,7 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG, suga
           <tr className="bg-slate-100 font-semibold">
             <td className="py-3 px-4 border-t-2 border-slate-300">Total</td>
             <td className="text-right py-3 px-4 border-t-2 border-slate-300">{totalVolumeMl.toFixed(0)}</td>
-            <td className="text-right py-3 px-4 border-t-2 border-slate-300">{totalVolumeOz.toFixed(2)}</td>
+            <td className="text-right py-3 px-4 border-t-2 border-slate-300">{roundToQuarterOz(totalVolumeOz).toFixed(2)}</td>
             {columnVisibility.weight && (
               <td className="text-right py-3 px-4 border-t-2 border-slate-300">{totalWeightG.toFixed(0)}</td>
             )}
