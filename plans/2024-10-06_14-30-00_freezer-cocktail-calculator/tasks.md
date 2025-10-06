@@ -8,4 +8,4 @@
 - [x] [P:3] Implement calculation functions (calculateBatch, calculateDilution)
 - [x] [P:4] Build UI components (IngredientInput, IngredientList, BatchConfig, ResultsTable, AbvBadge, DilutionSuggestion)
 - [x] [P:5] Integrate components in App.tsx with state management
-- [ ] [P:6] Test calculations manually, create netlify.toml, verify build
+- [x] [P:6] Test calculations manually, create netlify.toml, verify build

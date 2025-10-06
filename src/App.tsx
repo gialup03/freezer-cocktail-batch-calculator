@@ -16,6 +16,37 @@ function App() {
   
   const result = calculateBatch(ingredients, { batchSizeMl });
   
+  const handleApplyDilution = () => {
+    if (result.dilutionSuggestion.needsDilution && result.dilutionSuggestion.waterMl) {
+      // Check if water already exists
+      const hasWater = ingredients.some(ing => ing.name.toLowerCase() === 'water');
+      if (hasWater) {
+        alert('Water ingredient already exists. Please adjust it manually.');
+        return;
+      }
+      
+      // Calculate water ratio based on current total and suggested water volume
+      const currentTotalRatio = ingredients.reduce((sum, ing) => sum + ing.ratio, 0);
+      const currentVolume = batchSizeMl;
+      const waterVolume = result.dilutionSuggestion.waterMl;
+      const waterRatio = (waterVolume / currentVolume) * currentTotalRatio;
+      
+      // Add water to ingredients
+      const waterIngredient: Ingredient = {
+        id: Date.now().toString(),
+        name: 'Water',
+        ratio: Math.round(waterRatio * 100) / 100,
+        abv: 0,
+        density: 1.0
+      };
+      
+      setIngredients([...ingredients, waterIngredient]);
+      
+      // Increase batch size to account for added water
+      setBatchSizeMl(currentVolume + waterVolume);
+    }
+  };
+  
   return (
     <div className="min-h-screen bg-white">
       <header className="border-b border-slate-200 py-6 bg-white">
@@ -48,7 +79,10 @@ function App() {
           <>
             <section className="mb-8">
               <AbvBadge abv={result.finalAbv} />
-              <DilutionSuggestion suggestion={result.dilutionSuggestion} />
+              <DilutionSuggestion 
+                suggestion={result.dilutionSuggestion} 
+                onApplyDilution={handleApplyDilution}
+              />
             </section>
             
             <section>
