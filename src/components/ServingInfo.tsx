@@ -72,7 +72,7 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
 
   return (
     <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
-      <h2 className="text-2xl font-semibold text-slate-900 mb-4">Per Serving Information</h2>
+      <h2 className="text-2xl font-semibold text-slate-900 mb-4">Serving Information</h2>
       
       <div className="mb-6 max-w-2xl">
         <div className="flex justify-between items-baseline mb-2">
@@ -111,7 +111,7 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold text-slate-900 mb-3">Ingredient Breakdown per Serving</h3>
+        <h3 className="text-lg font-semibold text-slate-900 mb-3">Breakdown per Serving</h3>
         <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-200">
