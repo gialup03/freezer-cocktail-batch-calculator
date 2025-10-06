@@ -31,16 +31,6 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
     servingSizeMl: 90, // ~3 UK units at 32.8% ABV
   },
   {
-    name: 'Manhattan',
-    ingredients: [
-      { templateName: 'Whiskey', ratio: 2 },
-      { templateName: 'Sweet Vermouth', ratio: 1 },
-      { templateName: 'Angostura Bitters', ratio: 0.05 },
-    ],
-    dilutionPercent: 5, // Stirred, served up
-    servingSizeMl: 90, // ~3 UK units at 34.3% ABV
-  },
-  {
     name: 'Old Fashioned',
     ingredients: [
       { templateName: 'Whiskey', ratio: 2 },
@@ -49,5 +39,15 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
     ],
     dilutionPercent: 10, // Rocks cocktail
     servingSizeMl: 90, // ~3 UK units at 36.1% ABV
+  },
+  {
+    name: 'Manhattan',
+    ingredients: [
+      { templateName: 'Whiskey', ratio: 2 },
+      { templateName: 'Sweet Vermouth', ratio: 1 },
+      { templateName: 'Angostura Bitters', ratio: 0.05 },
+    ],
+    dilutionPercent: 5, // Stirred, served up
+    servingSizeMl: 90, // ~3 UK units at 34.3% ABV
   },
 ];
