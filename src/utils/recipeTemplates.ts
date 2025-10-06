@@ -17,7 +17,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Campari', ratio: 1 },
       { templateName: 'Sweet Vermouth', ratio: 1 },
     ],
-    dilutionPercent: 20, // Stirred cocktail, standard dilution
+    dilutionPercent: 10, // Rocks cocktail
   },
   {
     name: 'Martini',
@@ -25,7 +25,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Gin', ratio: 3 },
       { templateName: 'Dry Vermouth', ratio: 1 },
     ],
-    dilutionPercent: 22, // Stirred cocktail, slightly more dilution
+    dilutionPercent: 5, // Stirred, served up
   },
   {
     name: 'Manhattan',
@@ -34,7 +34,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Sweet Vermouth', ratio: 1 },
       { templateName: 'Angostura Bitters', ratio: 0.05 },
     ],
-    dilutionPercent: 22, // Stirred cocktail, standard dilution
+    dilutionPercent: 5, // Stirred, served up
   },
   {
     name: 'Old Fashioned',
@@ -43,6 +43,6 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Demerara Syrup', ratio: 0.25 },
       { templateName: 'Angostura Bitters', ratio: 0.05 },
     ],
-    dilutionPercent: 20, // Stirred cocktail, standard dilution
+    dilutionPercent: 10, // Rocks cocktail
   },
 ];
