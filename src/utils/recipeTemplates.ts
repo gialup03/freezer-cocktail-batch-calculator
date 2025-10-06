@@ -7,6 +7,7 @@ export interface RecipeTemplate {
   name: string;
   ingredients: RecipeIngredient[];
   dilutionPercent?: number; // Optional default dilution percentage
+  servingSizeMl?: number; // Optional default serving size for single serving
 }
 
 export const RECIPE_TEMPLATES: RecipeTemplate[] = [
@@ -18,6 +19,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Sweet Vermouth', ratio: 1 },
     ],
     dilutionPercent: 10, // Rocks cocktail
+    servingSizeMl: 120, // ~3 UK units at 24.9% ABV
   },
   {
     name: 'Martini',
@@ -26,6 +28,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Dry Vermouth', ratio: 1 },
     ],
     dilutionPercent: 5, // Stirred, served up
+    servingSizeMl: 92, // ~3 UK units at 32.8% ABV
   },
   {
     name: 'Manhattan',
@@ -35,6 +38,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Angostura Bitters', ratio: 0.05 },
     ],
     dilutionPercent: 5, // Stirred, served up
+    servingSizeMl: 87, // ~3 UK units at 34.3% ABV
   },
   {
     name: 'Old Fashioned',
@@ -44,5 +48,6 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Angostura Bitters', ratio: 0.05 },
     ],
     dilutionPercent: 10, // Rocks cocktail
+    servingSizeMl: 83, // ~3 UK units at 36.1% ABV
   },
 ];

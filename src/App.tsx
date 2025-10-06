@@ -92,6 +92,7 @@ function App() {
             onChange={setIngredients}
             columnVisibility={columnVisibility}
             onDilutionChange={setDilutionPercent}
+            onBatchSizeChange={setBatchSizeMl}
           />
         </section>
         
