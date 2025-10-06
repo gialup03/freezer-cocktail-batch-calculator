@@ -6,6 +6,7 @@ export interface RecipeIngredient {
 export interface RecipeTemplate {
   name: string;
   ingredients: RecipeIngredient[];
+  dilutionPercent?: number; // Optional default dilution percentage
 }
 
 export const RECIPE_TEMPLATES: RecipeTemplate[] = [
@@ -16,6 +17,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Campari', ratio: 1 },
       { templateName: 'Sweet Vermouth', ratio: 1 },
     ],
+    dilutionPercent: 20, // Stirred cocktail, standard dilution
   },
   {
     name: 'Martini',
@@ -23,6 +25,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Gin', ratio: 3 },
       { templateName: 'Dry Vermouth', ratio: 1 },
     ],
+    dilutionPercent: 22, // Stirred cocktail, slightly more dilution
   },
   {
     name: 'Manhattan',
@@ -31,6 +34,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Sweet Vermouth', ratio: 1 },
       { templateName: 'Angostura Bitters', ratio: 0.05 },
     ],
+    dilutionPercent: 22, // Stirred cocktail, standard dilution
   },
   {
     name: 'Old Fashioned',
@@ -39,5 +43,6 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Demerara Syrup', ratio: 0.25 },
       { templateName: 'Angostura Bitters', ratio: 0.05 },
     ],
+    dilutionPercent: 20, // Stirred cocktail, standard dilution
   },
 ];

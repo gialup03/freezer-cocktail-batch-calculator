@@ -10,12 +10,14 @@ interface IngredientListProps {
   ingredients: Ingredient[];
   onChange: (ingredients: Ingredient[]) => void;
   columnVisibility: ColumnVisibility;
+  onDilutionChange?: (dilution: number) => void;
 }
 
 export function IngredientList({ 
   ingredients, 
   onChange, 
-  columnVisibility
+  columnVisibility,
+  onDilutionChange
 }: IngredientListProps) {
 
   const addIngredient = (name: string = '') => {
@@ -64,6 +66,11 @@ export function IngredientList({
       };
     });
     onChange(newIngredients);
+    
+    // Set default dilution if provided
+    if (recipe.dilutionPercent !== undefined && onDilutionChange) {
+      onDilutionChange(recipe.dilutionPercent);
+    }
   };
 
   const updateIngredient = (index: number, updated: Ingredient) => {

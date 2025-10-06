@@ -91,6 +91,7 @@ function App() {
             ingredients={ingredients}
             onChange={setIngredients}
             columnVisibility={columnVisibility}
+            onDilutionChange={setDilutionPercent}
           />
         </section>
         
