@@ -26,36 +26,23 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
   };
 
   const defaultVolume = calculateDefaultVolume();
-  const defaultServings = Math.round(batchSizeMl / defaultVolume);
 
-  const [servingsCount, setServingsCount] = useState(defaultServings);
   const [servingVolumeMl, setServingVolumeMl] = useState(defaultVolume);
 
   // Update serving size when defaultServingSizeMl changes (from recipe selection)
   useEffect(() => {
     if (defaultServingSizeMl !== undefined) {
       setServingVolumeMl(defaultServingSizeMl);
-      setServingsCount(Math.round(batchSizeMl / defaultServingSizeMl));
     }
-  }, [defaultServingSizeMl, batchSizeMl]);
+  }, [defaultServingSizeMl]);
 
-  // Calculate min and max servings based on 200ml max serving and 50ml min serving
-  const minServings = Math.ceil(batchSizeMl / 200);
-  const maxServings = Math.floor(batchSizeMl / 50);
-
-  const handleServingsChange = (value: number) => {
-    if (value > 0) {
-      const roundedValue = Math.round(value);
-      setServingsCount(roundedValue);
-      setServingVolumeMl(Math.round(batchSizeMl / roundedValue));
-    }
-  };
+  // Calculate servings count based on serving volume
+  const servingsCount = Math.round(batchSizeMl / servingVolumeMl);
 
   const handleVolumeChange = (value: number) => {
     if (value > 0) {
       const roundedVolume = Math.round(value);
       setServingVolumeMl(roundedVolume);
-      setServingsCount(Math.round(batchSizeMl / roundedVolume));
     }
   };
 
@@ -87,66 +74,39 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
     <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
       <h2 className="text-2xl font-semibold text-slate-900 mb-4">Per Serving Information</h2>
       
-      <div className="mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl">
-          <div>
-            <div className="flex justify-between items-baseline mb-2">
-              <label className="text-sm font-medium text-slate-600">
-                Number of Servings
-              </label>
-              <span className="text-lg font-semibold text-slate-900">
-                {Math.round(servingsCount)}
-              </span>
-            </div>
-            <input
-              type="range"
-              min={minServings}
-              max={maxServings}
-              step="1"
-              value={Math.round(servingsCount)}
-              onChange={(e) => handleServingsChange(parseFloat(e.target.value))}
-              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-              style={{
-                background: `linear-gradient(to right, #2563eb 0%, #2563eb ${((Math.round(servingsCount) - minServings) / (maxServings - minServings)) * 100}%, #e2e8f0 ${((Math.round(servingsCount) - minServings) / (maxServings - minServings)) * 100}%, #e2e8f0 100%)`
-              }}
-            />
-            <div className="flex justify-between text-xs text-slate-500 mt-1">
-              <span>{minServings}</span>
-              <span>{maxServings}</span>
-            </div>
-          </div>
-          <div>
-            <div className="flex justify-between items-baseline mb-2">
-              <label className="text-sm font-medium text-slate-600">
-                Volume
-              </label>
-              <span className="text-lg font-semibold text-slate-900">
-                {Math.round(servingVolumeMl)} mL ({roundToQuarterOz(servingVolumeMl / 29.5735).toFixed(2)} oz)
-              </span>
-            </div>
-            <input
-              type="range"
-              min="50"
-              max="200"
-              step="5"
-              value={Math.round(servingVolumeMl)}
-              onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-              style={{
-                background: `linear-gradient(to right, #2563eb 0%, #2563eb ${((Math.round(servingVolumeMl) - 50) / 150) * 100}%, #e2e8f0 ${((Math.round(servingVolumeMl) - 50) / 150) * 100}%, #e2e8f0 100%)`
-              }}
-            />
-            <div className="flex justify-between text-xs text-slate-500 mt-1">
-              <span>50 mL</span>
-              <span>200 mL</span>
-            </div>
-          </div>
+      <div className="mb-6 max-w-2xl">
+        <div className="flex justify-between items-baseline mb-2">
+          <label className="text-sm font-medium text-slate-600">
+            Serving Volume
+          </label>
+          <span className="text-lg font-semibold text-slate-900">
+            {Math.round(servingVolumeMl)} mL ({roundToQuarterOz(servingVolumeMl / 29.5735).toFixed(2)} oz)
+          </span>
+        </div>
+        <input
+          type="range"
+          min="50"
+          max="200"
+          step="5"
+          value={Math.round(servingVolumeMl)}
+          onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+          style={{
+            background: `linear-gradient(to right, #2563eb 0%, #2563eb ${((Math.round(servingVolumeMl) - 50) / 150) * 100}%, #e2e8f0 ${((Math.round(servingVolumeMl) - 50) / 150) * 100}%, #e2e8f0 100%)`
+          }}
+        />
+        <div className="flex justify-between text-xs text-slate-500 mt-1">
+          <span>50 mL</span>
+          <span>200 mL</span>
         </div>
       </div>
 
       <div className="mb-6 max-w-2xl">
         <p className="text-sm text-slate-600">
           {ukUnitsPerServing.toFixed(1)} UK alcohol units per serving
+        </p>
+        <p className="text-sm text-slate-600">
+          {Math.round(servingsCount)} servings in batch
         </p>
       </div>
 
