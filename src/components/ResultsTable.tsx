@@ -5,9 +5,11 @@ interface ResultsTableProps {
   columnVisibility: ColumnVisibility;
   totalSugarG?: number;
   sugarGPerL?: number;
+  batchSizeMl: number;
+  onBatchSizeChange: (batchSizeMl: number) => void;
 }
 
-export function ResultsTable({ calculations, columnVisibility, totalSugarG, sugarGPerL }: ResultsTableProps) {
+export function ResultsTable({ calculations, columnVisibility, totalSugarG, sugarGPerL, batchSizeMl, onBatchSizeChange }: ResultsTableProps) {
   if (calculations.length === 0) {
     return null;
   }
@@ -20,8 +22,22 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG, suga
 
   return (
     <div className="overflow-x-auto">
-      <div className="mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-slate-900">Batch Breakdown</h2>
+        <div className="flex items-center gap-3">
+          <label className="text-sm font-medium text-slate-600">
+            Batch Size (mL)
+          </label>
+          <input
+            type="number"
+            min="0"
+            step="50"
+            value={batchSizeMl}
+            onChange={(e) => onBatchSizeChange(parseFloat(e.target.value) || 0)}
+            className="w-32 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+            placeholder="e.g., 750"
+          />
+        </div>
       </div>
       
       <table className="w-full border-collapse">

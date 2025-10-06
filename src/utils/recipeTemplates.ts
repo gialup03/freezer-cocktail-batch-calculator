@@ -40,27 +40,4 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Angostura Bitters', ratio: 0.05 },
     ],
   },
-  {
-    name: 'Boulevardier',
-    ingredients: [
-      { templateName: 'Whiskey', ratio: 1 },
-      { templateName: 'Campari', ratio: 1 },
-      { templateName: 'Sweet Vermouth', ratio: 1 },
-    ],
-  },
-  {
-    name: 'Vesper',
-    ingredients: [
-      { templateName: 'Gin', ratio: 3 },
-      { templateName: 'Vodka', ratio: 1 },
-      { templateName: 'Lillet Blanc', ratio: 0.5 },
-    ],
-  },
-  {
-    name: 'Black Manhattan',
-    ingredients: [
-      { templateName: 'Whiskey', ratio: 2 },
-      { templateName: 'Amaro Nonino', ratio: 1 },
-    ],
-  },
 ];

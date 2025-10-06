@@ -79,7 +79,7 @@ export function IngredientInput({ ingredient, onChange, onDelete, columnVisibili
           type="number"
           min="0"
           max="100"
-          step="0.1"
+          step="0.5"
           value={ingredient.abv}
           onChange={(e) => onChange({ ...ingredient, abv: parseFloat(e.target.value) || 0 })}
           className="w-full px-2 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
