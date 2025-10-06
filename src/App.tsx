@@ -14,7 +14,7 @@ function App() {
     { id: '2', name: 'Dry Vermouth', ratio: 1, abv: 18, densityGPerL: 980, sugarGPerL: 40 },
   ]);
   const [batchSizeMl, setBatchSizeMl] = useState(750);
-  const [dilutionPercent, setDilutionPercent] = useState(0);
+  const [dilutionPercent, setDilutionPercent] = useState(5); // Default to Martini's dilution
   const [servingSizeMl, setServingSizeMl] = useState<number | undefined>(undefined);
   const [columnVisibility, setColumnVisibility] = useState<ColumnVisibility>({
     weight: false,
