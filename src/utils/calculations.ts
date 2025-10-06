@@ -82,7 +82,7 @@ export function calculateBatch(
     finalCalculations.push({
       ingredient: {
         id: 'water',
-        name: 'Water (dilution)',
+        name: 'Water',
         ratio: 0, // Water is not part of the base ratio
         abv: 0,
         densityGPerL: 1000

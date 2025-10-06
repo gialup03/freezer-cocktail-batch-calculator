@@ -55,8 +55,10 @@ export function AbvBadge({ abv, sugarGPerL, showSugar }: AbvBadgeProps) {
       <div className={`text-center py-6 rounded-lg border-2 ${getColorClass()}`}>
         <div className="text-sm font-medium uppercase tracking-wide mb-1">Final ABV</div>
         <div className="text-5xl font-bold">{abv.toFixed(1)}%</div>
-        {abv >= 30 && (
+        {abv >= 30 ? (
           <div className="mt-2 text-sm">Optimal freezer range</div>
+        ) : (
+          <div className="mt-2 text-sm">May result in a slushy texture based on sugar content and freezer temperatures</div>
         )}
       </div>
       

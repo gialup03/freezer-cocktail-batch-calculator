@@ -1,4 +1,4 @@
-import { Droplet, AlertTriangle } from 'lucide-react';
+import { Droplet } from 'lucide-react';
 import type { Ingredient } from '../types';
 
 interface DilutionControlProps {
@@ -12,10 +12,8 @@ interface DilutionControlProps {
 export function DilutionControl({ 
   dilutionPercent, 
   onChange, 
-  finalAbv,
   ingredients 
 }: DilutionControlProps) {
-  const showFreezeWarning = finalAbv < 30;
   
   // Calculate water parts relative to recipe parts
   const getWaterParts = () => {
@@ -35,16 +33,16 @@ export function DilutionControl({
   };
   
   return (
-    <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
+    <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
       <div className="flex items-center gap-2 mb-4">
-        <Droplet className="text-slate-700" size={20} />
-        <h3 className="font-semibold text-slate-900">Dilution Control</h3>
+        <Droplet className="text-blue-700" size={20} />
+        <h3 className="font-semibold text-blue-900">Dilution Control</h3>
       </div>
       
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
-          <label htmlFor="dilution-slider" className="text-sm font-medium text-slate-700">
-            Water Dilution
+          <label htmlFor="dilution-slider" className="text-sm font-medium text-slate-900">
+            Water Volume
           </label>
           <span className="text-sm font-semibold text-slate-900">
             {dilutionPercent}% ({getWaterParts()})
@@ -59,7 +57,7 @@ export function DilutionControl({
           step="1"
           value={dilutionPercent}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+          className="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
         />
         
         <div className="flex justify-between text-xs text-slate-500 mt-1">
@@ -67,19 +65,6 @@ export function DilutionControl({
           <span>Maximum dilution</span>
         </div>
       </div>
-      
-      {showFreezeWarning && (
-        <div className="mt-4 bg-amber-50 border border-amber-200 rounded-md p-3 flex items-start gap-2">
-          <AlertTriangle className="text-amber-600 flex-shrink-0 mt-0.5" size={18} />
-          <div className="text-sm">
-            <p className="font-semibold text-amber-900">Freeze Warning</p>
-            <p className="text-amber-800 mt-1">
-              ABV below 30% may result in a slushy texture based on sugar content and freezer temperatures. 
-              For a pourable consistency, aim for 30% ABV or higher.
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

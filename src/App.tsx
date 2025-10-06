@@ -25,12 +25,12 @@ function App() {
     <div className="min-h-screen bg-white">
       <header className="border-b border-slate-200 py-6 bg-white">
         <div className="container mx-auto px-4 max-w-6xl">
-          <h1 className="text-4xl font-bold text-slate-900">
-            Freezer Cocktail Calculator
-          </h1>
-          <p className="text-slate-600 mt-2">
-            Calculate volumes, weights, and ABV for batched cocktails
-          </p>
+          <div className="flex items-center gap-4">
+            <img src="/martini.svg" alt="Martini" className="w-10 h-10" />
+            <h1 className="text-4xl font-bold text-slate-900">
+              Batch Cocktail Calculator
+            </h1>
+          </div>
         </div>
       </header>
       
