@@ -38,7 +38,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Angostura Bitters', ratio: 0.05 },
     ],
     dilutionPercent: 5, // Stirred, served up
-    servingSizeMl: 85, // ~3 UK units at 34.3% ABV
+    servingSizeMl: 90, // ~3 UK units at 34.3% ABV
   },
   {
     name: 'Old Fashioned',
