@@ -48,6 +48,6 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'Angostura Bitters', ratio: 0.05 },
     ],
     dilutionPercent: 10, // Rocks cocktail
-    servingSizeMl: 85, // ~3 UK units at 36.1% ABV
+    servingSizeMl: 90, // ~3 UK units at 36.1% ABV
   },
 ];
