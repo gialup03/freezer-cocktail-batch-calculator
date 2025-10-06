@@ -30,10 +30,18 @@ export function calculateBatch(
     };
   }
   
-  // 2. Calculate base ingredient volumes (before dilution)
-  const baseVolumeMl = config.batchSizeMl;
+  // 2. Calculate water volume based on dilution percentage
+  // dilutionPercent represents the percentage of FINAL volume that should be water
+  // waterMl = batchSizeMl * (dilutionPercent / 100)
+  // ingredientsVolume = batchSizeMl * (1 - dilutionPercent / 100)
+  const waterMl = config.dilutionPercent > 0 
+    ? Math.round((config.batchSizeMl * config.dilutionPercent / 100) * 10) / 10
+    : 0;
+  
+  // 3. Calculate ingredient volumes from remaining volume after water
+  const ingredientsVolumeMl = config.batchSizeMl - waterMl;
   const calculations: IngredientCalculation[] = ingredients.map(ing => {
-    const volumeMl = (ing.ratio / totalRatio) * baseVolumeMl;
+    const volumeMl = (ing.ratio / totalRatio) * ingredientsVolumeMl;
     const volumeOz = volumeMl * 0.033814; // mL to oz conversion
     // Convert density from g/L to g/mL by dividing by 1000, then multiply by volume in mL
     const weightG = volumeMl * (ing.densityGPerL / 1000);
@@ -48,22 +56,14 @@ export function calculateBatch(
     };
   });
   
-  // 3. Calculate total alcohol content from base ingredients
+  // 4. Calculate total alcohol content from ingredients
   const totalAlcoholMl = calculations.reduce(
     (sum, calc) => sum + (calc.volumeMl * calc.ingredient.abv / 100),
     0
   );
   
-  // 4. Calculate water to add based on dilution percentage
-  // dilutionPercent represents the percentage of FINAL volume that should be water
-  // So: waterMl / totalVolumeMl = dilutionPercent / 100
-  // Therefore: waterMl = (baseVolume * dilutionPercent) / (100 - dilutionPercent)
-  const waterMl = config.dilutionPercent > 0 
-    ? Math.round((baseVolumeMl * config.dilutionPercent) / (100 - config.dilutionPercent))
-    : 0;
-  
-  // 5. Calculate final ABV with dilution
-  const totalVolumeMl = baseVolumeMl + waterMl;
+  // 5. Calculate final ABV with dilution (total volume equals batch size)
+  const totalVolumeMl = config.batchSizeMl;
   const finalAbv = (totalAlcoholMl / totalVolumeMl) * 100;
   
   // Calculate total sugar
