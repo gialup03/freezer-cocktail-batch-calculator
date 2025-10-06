@@ -15,7 +15,7 @@ export function BatchConfig({ batchSizeMl, onChange }: BatchConfigProps) {
         <input
           type="number"
           min="0"
-          step="10"
+          step="25"
           value={batchSizeMl}
           onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
           className="w-full px-4 py-3 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent text-lg"

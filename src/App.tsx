@@ -44,7 +44,7 @@ function App() {
           />
         </section>
         
-        {ingredients.length > 0 && batchSizeMl > 0 && (
+        {ingredients.length > 0 && (
           <>
             <section className="mb-8">
               <DilutionControl

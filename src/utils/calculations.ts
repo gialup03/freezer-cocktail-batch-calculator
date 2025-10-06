@@ -30,76 +30,94 @@ export function calculateBatch(
     };
   }
   
-  // 2. Calculate water volume based on dilution percentage
-  // dilutionPercent represents the percentage of FINAL volume that should be water
-  // waterMl = batchSizeMl * (dilutionPercent / 100)
-  // ingredientsVolume = batchSizeMl * (1 - dilutionPercent / 100)
-  const waterMl = config.dilutionPercent > 0 
-    ? Math.round((config.batchSizeMl * config.dilutionPercent / 100) * 10) / 10
-    : 0;
+  // 2. Calculate ABV and sugar g/L based on ratios and dilution (independent of batch size)
+  // These are intensive properties - they depend on proportions, not absolute volumes
   
-  // 3. Calculate ingredient volumes from remaining volume after water
-  const ingredientsVolumeMl = config.batchSizeMl - waterMl;
-  const calculations: IngredientCalculation[] = ingredients.map(ing => {
-    const volumeMl = (ing.ratio / totalRatio) * ingredientsVolumeMl;
-    const volumeOz = volumeMl * 0.033814; // mL to oz conversion
-    // Convert density from g/L to g/mL by dividing by 1000, then multiply by volume in mL
-    const weightG = volumeMl * (ing.densityGPerL / 1000);
-    const sugarG = ing.sugarGPerL ? (volumeMl / 1000) * ing.sugarGPerL : undefined;
-    
-    return { 
-      ingredient: ing, 
-      volumeMl: Math.round(volumeMl * 10) / 10, 
-      volumeOz: Math.round(volumeOz * 100) / 100, 
-      weightG: Math.round(weightG * 10) / 10,
-      sugarG: sugarG !== undefined ? Math.round(sugarG * 10) / 10 : undefined
-    };
-  });
+  // Calculate the proportion of each ingredient in the undiluted mix
+  const ingredientProportions = ingredients.map(ing => ({
+    ingredient: ing,
+    proportion: ing.ratio / totalRatio
+  }));
   
-  // 4. Calculate total alcohol content from ingredients
-  const totalAlcoholMl = calculations.reduce(
-    (sum, calc) => sum + (calc.volumeMl * calc.ingredient.abv / 100),
+  // Calculate weighted average alcohol content (before dilution)
+  const undilutedAlcoholContent = ingredientProportions.reduce(
+    (sum, { ingredient, proportion }) => sum + (proportion * ingredient.abv),
     0
   );
   
-  // 5. Calculate final ABV with dilution (total volume equals batch size)
-  const totalVolumeMl = config.batchSizeMl;
-  const finalAbv = (totalAlcoholMl / totalVolumeMl) * 100;
+  // Apply dilution: if dilution is X%, then ingredients are (100-X)% of final volume
+  const ingredientsFraction = (100 - config.dilutionPercent) / 100;
+  const finalAbv = undilutedAlcoholContent * ingredientsFraction;
   
-  // Calculate total sugar
-  const totalSugarG = calculations.reduce(
-    (sum, calc) => sum + (calc.sugarG || 0),
+  // Calculate sugar concentration
+  // For each ingredient: its sugar concentration (g/L) weighted by its proportion
+  const undilutedSugarGPerL = ingredientProportions.reduce(
+    (sum, { ingredient, proportion }) => {
+      const ingredientSugar = ingredient.sugarGPerL || 0;
+      return sum + (proportion * ingredientSugar);
+    },
     0
   );
-  const sugarGPerL = totalVolumeMl > 0 ? (totalSugarG / totalVolumeMl) * 1000 : undefined;
   
-  // 6. Add water as a separate calculation if there's dilution
-  let finalCalculations = [...calculations];
-  if (waterMl > 0) {
-    const waterOz = waterMl * 0.033814;
-    const waterWeight = waterMl * 1.0; // density of water is 1000 g/L = 1.0 g/mL
+  // Apply dilution to sugar concentration
+  const sugarGPerL = undilutedSugarGPerL * ingredientsFraction;
+  
+  // 3. Calculate absolute volumes based on batch size (only if batch size > 0)
+  let calculations: IngredientCalculation[] = [];
+  let waterMl = 0;
+  let totalSugarG: number | undefined = undefined;
+  
+  if (config.batchSizeMl > 0) {
+    waterMl = config.dilutionPercent > 0 
+      ? Math.round((config.batchSizeMl * config.dilutionPercent / 100) * 10) / 10
+      : 0;
     
-    finalCalculations.push({
-      ingredient: {
-        id: 'water',
-        name: 'Water',
-        ratio: 0, // Water is not part of the base ratio
-        abv: 0,
-        densityGPerL: 1000
-      },
-      volumeMl: Math.round(waterMl * 10) / 10,
-      volumeOz: Math.round(waterOz * 100) / 100,
-      weightG: Math.round(waterWeight * 10) / 10,
-      sugarG: undefined
+    const ingredientsVolumeMl = config.batchSizeMl - waterMl;
+    
+    calculations = ingredients.map(ing => {
+      const volumeMl = (ing.ratio / totalRatio) * ingredientsVolumeMl;
+      const volumeOz = volumeMl * 0.033814;
+      const weightG = volumeMl * (ing.densityGPerL / 1000);
+      const sugarG = ing.sugarGPerL ? (volumeMl / 1000) * ing.sugarGPerL : undefined;
+      
+      return { 
+        ingredient: ing, 
+        volumeMl: Math.round(volumeMl * 10) / 10, 
+        volumeOz: Math.round(volumeOz * 100) / 100, 
+        weightG: Math.round(weightG * 10) / 10,
+        sugarG: sugarG !== undefined ? Math.round(sugarG * 10) / 10 : undefined
+      };
     });
+    
+    totalSugarG = calculations.reduce((sum, calc) => sum + (calc.sugarG || 0), 0);
+    
+    // Add water to calculations if there's dilution
+    if (waterMl > 0) {
+      const waterOz = waterMl * 0.033814;
+      const waterWeight = waterMl * 1.0;
+      
+      calculations.push({
+        ingredient: {
+          id: 'water',
+          name: 'Water',
+          ratio: 0,
+          abv: 0,
+          densityGPerL: 1000
+        },
+        volumeMl: Math.round(waterMl * 10) / 10,
+        volumeOz: Math.round(waterOz * 100) / 100,
+        weightG: Math.round(waterWeight * 10) / 10,
+        sugarG: undefined
+      });
+    }
   }
   
   return { 
-    ingredients: finalCalculations, 
+    ingredients: calculations, 
     finalAbv: Math.round(finalAbv * 10) / 10,
     waterMl: waterMl,
-    totalVolumeMl: totalVolumeMl,
-    totalSugarG: totalSugarG > 0 ? Math.round(totalSugarG * 10) / 10 : undefined,
-    sugarGPerL: sugarGPerL !== undefined && sugarGPerL > 0 ? Math.round(sugarGPerL * 10) / 10 : undefined
+    totalVolumeMl: config.batchSizeMl,
+    totalSugarG: totalSugarG !== undefined && totalSugarG > 0 ? Math.round(totalSugarG * 10) / 10 : undefined,
+    sugarGPerL: sugarGPerL > 0 ? Math.round(sugarGPerL * 10) / 10 : undefined
   };
 }
