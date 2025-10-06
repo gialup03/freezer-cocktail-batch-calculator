@@ -34,7 +34,7 @@ export function AbvBadge({ abv, sugarGPerL, showSugar }: AbvBadgeProps) {
         colorClass: 'bg-amber-300 text-amber-900 border-amber-400',
         label: 'Medium-sweet'
       };
-    } else if (sugar < 120) {
+    } else if (sugar < 140) {
       return {
         colorClass: 'bg-amber-400 text-amber-950 border-amber-500',
         label: 'Sweet'
