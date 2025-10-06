@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { X } from 'lucide-react';
 import type { Ingredient, ColumnVisibility } from '../types';
 
@@ -9,6 +10,47 @@ interface IngredientInputProps {
 }
 
 export function IngredientInput({ ingredient, onChange, onDelete, columnVisibility }: IngredientInputProps) {
+  const [isEditingRatio, setIsEditingRatio] = useState(false);
+  const [ratioDisplayValue, setRatioDisplayValue] = useState('');
+
+  // Format ratio for display: round appropriately based on size, remove leading 0
+  const formatRatio = (ratio: number): string => {
+    if (ratio < 0.1) {
+      // Round to nearest 0.005
+      const rounded = Math.round(ratio / 0.005) * 0.005;
+      // Format with 3 decimals, remove trailing zeros, then remove leading 0
+      return rounded.toFixed(3).replace(/0+$/, '').replace(/^0/, '');
+    } else if (ratio < 1) {
+      // Round to nearest 0.05
+      const rounded = Math.round(ratio / 0.05) * 0.05;
+      // Format with 2 decimals, remove trailing zeros, then remove leading 0
+      return rounded.toFixed(2).replace(/0+$/, '').replace(/^0/, '');
+    }
+    return ratio.toString();
+  };
+
+  // Parse display value back to number
+  const parseRatio = (value: string): number => {
+    // Handle values like ".5" by adding the leading 0
+    const normalized = value.startsWith('.') ? '0' + value : value;
+    return parseFloat(normalized) || 0;
+  };
+
+  const handleRatioFocus = () => {
+    setIsEditingRatio(true);
+    setRatioDisplayValue(ingredient.ratio.toString());
+  };
+
+  const handleRatioBlur = () => {
+    setIsEditingRatio(false);
+    const parsed = parseRatio(ratioDisplayValue);
+    onChange({ ...ingredient, ratio: parsed });
+  };
+
+  const handleRatioChange = (value: string) => {
+    setRatioDisplayValue(value);
+  };
+
   return (
     <tr className="border-b border-slate-200 hover:bg-slate-50">
       <td className="px-2 py-1.5 min-w-[144px]">
@@ -23,11 +65,11 @@ export function IngredientInput({ ingredient, onChange, onDelete, columnVisibili
       
       <td className="px-2 py-1.5 w-[70px] min-w-[70px]">
         <input
-          type="number"
-          min="0"
-          step="0.5"
-          value={ingredient.ratio}
-          onChange={(e) => onChange({ ...ingredient, ratio: parseFloat(e.target.value) || 0 })}
+          type="text"
+          value={isEditingRatio ? ratioDisplayValue : formatRatio(ingredient.ratio)}
+          onChange={(e) => handleRatioChange(e.target.value)}
+          onFocus={handleRatioFocus}
+          onBlur={handleRatioBlur}
           className="w-full px-2 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
         />
       </td>
