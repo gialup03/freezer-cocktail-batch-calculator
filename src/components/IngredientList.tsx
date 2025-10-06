@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { Plus, Settings } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import type { Ingredient, ColumnVisibility } from '../types';
 import { IngredientInput } from './IngredientInput';
+import { TemplateSelector } from './TemplateSelector';
+import { RecipeTemplates } from './RecipeTemplates';
+import type { IngredientTemplate } from '../utils/ingredientTemplates';
+import { INGREDIENT_TEMPLATES } from '../utils/ingredientTemplates';
+import type { RecipeTemplate } from '../utils/recipeTemplates';
 
 interface IngredientListProps {
   ingredients: Ingredient[];
@@ -19,15 +24,52 @@ export function IngredientList({
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const optionsRef = useRef<HTMLDivElement>(null);
 
-  const addIngredient = () => {
+  const addIngredient = (name: string = '') => {
     const newIngredient: Ingredient = {
       id: Date.now().toString(),
-      name: '',
+      name: name,
       ratio: 1,
       abv: 0,
       densityGPerL: 1000
     };
     onChange([...ingredients, newIngredient]);
+  };
+
+  const addIngredientFromTemplate = (template: IngredientTemplate, ratio: number = 1) => {
+    const newIngredient: Ingredient = {
+      id: Date.now().toString(),
+      name: template.name,
+      ratio: ratio,
+      abv: template.abv,
+      densityGPerL: template.densityGPerL,
+      sugarGPerL: template.sugarGPerL
+    };
+    onChange([...ingredients, newIngredient]);
+  };
+
+  const loadRecipe = (recipe: RecipeTemplate) => {
+    const newIngredients: Ingredient[] = recipe.ingredients.map((recipeIngredient) => {
+      const template = INGREDIENT_TEMPLATES.find(t => t.name === recipeIngredient.templateName);
+      if (!template) {
+        // Fallback if template not found
+        return {
+          id: Date.now().toString() + Math.random(),
+          name: recipeIngredient.templateName,
+          ratio: recipeIngredient.ratio,
+          abv: 0,
+          densityGPerL: 1000
+        };
+      }
+      return {
+        id: Date.now().toString() + Math.random(),
+        name: template.name,
+        ratio: recipeIngredient.ratio,
+        abv: template.abv,
+        densityGPerL: template.densityGPerL,
+        sugarGPerL: template.sugarGPerL
+      };
+    });
+    onChange(newIngredients);
   };
 
   const updateIngredient = (index: number, updated: Ingredient) => {
@@ -63,6 +105,8 @@ export function IngredientList({
 
   return (
     <div className="space-y-4">
+      <RecipeTemplates onSelectRecipe={loadRecipe} />
+      
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-slate-900">Ingredients</h2>
         <div className="flex items-center gap-2">
@@ -105,13 +149,10 @@ export function IngredientList({
             )}
           </div>
           
-          <button
-            onClick={addIngredient}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors"
-          >
-            <Plus size={20} />
-            Add Ingredient
-          </button>
+          <TemplateSelector 
+            onSelect={addIngredientFromTemplate}
+            onAddCustom={addIngredient}
+          />
         </div>
       </div>
       
