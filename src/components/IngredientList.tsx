@@ -120,30 +120,30 @@ export function IngredientList({
           <p className="text-slate-500">No ingredients added yet. Click "Add Ingredient" to start.</p>
         </div>
       ) : (
-        <div className="border border-slate-200 rounded-lg overflow-hidden bg-white">
+        <div className="border border-slate-200 rounded-lg overflow-x-auto bg-white">
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
+                <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 min-w-[144px]">
                   Ingredient Name
                 </th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
+                <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-[70px] min-w-[70px]">
                   Ratio
                 </th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
+                <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-[85px] min-w-[85px]">
                   ABV (%)
                 </th>
                 {columnVisibility.weight && (
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
+                  <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-28 min-w-28">
                     Density (g/L)
                   </th>
                 )}
                 {columnVisibility.sugar && (
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
-                    Sugar Conc. (g/L)
+                  <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-28 min-w-28">
+                    Sugar (g/L)
                   </th>
                 )}
-                <th className="px-4 py-3"></th>
+                <th className="px-2 py-1.5 w-6 min-w-6"></th>
               </tr>
             </thead>
             <tbody>
