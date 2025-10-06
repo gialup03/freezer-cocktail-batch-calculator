@@ -3,7 +3,7 @@ export interface Ingredient {
   name: string;
   ratio: number; // e.g., 3 for gin in 3:1 martini
   abv: number;   // 0-100 (e.g., 40 for 40% ABV)
-  density: number; // g/mL (e.g., 0.95 for vodka, 1.0 for water)
+  densityGPerL: number; // g/L (e.g., 940 for spirits, 1000 for water)
   sugarGPerL?: number; // g/L (e.g., 100 for 100g sugar per liter)
 }
 
@@ -30,7 +30,6 @@ export interface BatchResult {
 }
 
 export interface ColumnVisibility {
-  density: boolean;
   weight: boolean;
   sugar: boolean;
 }

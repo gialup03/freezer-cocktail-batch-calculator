@@ -25,7 +25,7 @@ export function IngredientList({
       name: '',
       ratio: 1,
       abv: 0,
-      density: 1.0
+      densityGPerL: 1000
     };
     onChange([...ingredients, newIngredient]);
   };
@@ -85,20 +85,11 @@ export function IngredientList({
                   <label className="flex items-center gap-2 px-2 py-2 hover:bg-slate-50 rounded cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={columnVisibility.density}
-                      onChange={() => toggleColumn('density')}
-                      className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-slate-700">Density (g/mL)</span>
-                  </label>
-                  <label className="flex items-center gap-2 px-2 py-2 hover:bg-slate-50 rounded cursor-pointer">
-                    <input
-                      type="checkbox"
                       checked={columnVisibility.weight}
                       onChange={() => toggleColumn('weight')}
                       className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
                     />
-                    <span className="text-sm text-slate-700">Weight (g)</span>
+                    <span className="text-sm text-slate-700">Weight</span>
                   </label>
                   <label className="flex items-center gap-2 px-2 py-2 hover:bg-slate-50 rounded cursor-pointer">
                     <input
@@ -107,7 +98,7 @@ export function IngredientList({
                       onChange={() => toggleColumn('sugar')}
                       className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
                     />
-                    <span className="text-sm text-slate-700">Sugar (g/L)</span>
+                    <span className="text-sm text-slate-700">Sugar</span>
                   </label>
                 </div>
               </div>
@@ -142,14 +133,14 @@ export function IngredientList({
                 <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
                   ABV (%)
                 </th>
-                {columnVisibility.density && (
+                {columnVisibility.weight && (
                   <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
-                    Density (g/mL)
+                    Density (g/L)
                   </th>
                 )}
                 {columnVisibility.sugar && (
                   <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
-                    Sugar (g/L)
+                    Sugar Conc. (g/L)
                   </th>
                 )}
                 <th className="px-4 py-3"></th>

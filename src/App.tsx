@@ -9,13 +9,12 @@ import { ResultsTable } from './components/ResultsTable';
 
 function App() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([
-    { id: '1', name: 'Gin', ratio: 3, abv: 40, density: 0.94 },
-    { id: '2', name: 'Dry Vermouth', ratio: 1, abv: 18, density: 0.98 },
+    { id: '1', name: 'Gin', ratio: 3, abv: 40, densityGPerL: 940 },
+    { id: '2', name: 'Dry Vermouth', ratio: 1, abv: 18, densityGPerL: 980 },
   ]);
   const [batchSizeMl, setBatchSizeMl] = useState(750);
   const [dilutionPercent, setDilutionPercent] = useState(0);
   const [columnVisibility, setColumnVisibility] = useState<ColumnVisibility>({
-    density: false,
     weight: false,
     sugar: false
   });

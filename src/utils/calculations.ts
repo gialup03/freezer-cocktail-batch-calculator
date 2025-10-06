@@ -35,7 +35,8 @@ export function calculateBatch(
   const calculations: IngredientCalculation[] = ingredients.map(ing => {
     const volumeMl = (ing.ratio / totalRatio) * baseVolumeMl;
     const volumeOz = volumeMl * 0.033814; // mL to oz conversion
-    const weightG = volumeMl * ing.density;
+    // Convert density from g/L to g/mL by dividing by 1000, then multiply by volume in mL
+    const weightG = volumeMl * (ing.densityGPerL / 1000);
     const sugarG = ing.sugarGPerL ? (volumeMl / 1000) * ing.sugarGPerL : undefined;
     
     return { 
@@ -76,7 +77,7 @@ export function calculateBatch(
   let finalCalculations = [...calculations];
   if (waterMl > 0) {
     const waterOz = waterMl * 0.033814;
-    const waterWeight = waterMl * 1.0; // density of water is 1.0
+    const waterWeight = waterMl * 1.0; // density of water is 1000 g/L = 1.0 g/mL
     
     finalCalculations.push({
       ingredient: {
@@ -84,7 +85,7 @@ export function calculateBatch(
         name: 'Water (dilution)',
         ratio: 0, // Water is not part of the base ratio
         abv: 0,
-        density: 1.0
+        densityGPerL: 1000
       },
       volumeMl: Math.round(waterMl * 10) / 10,
       volumeOz: Math.round(waterOz * 100) / 100,
