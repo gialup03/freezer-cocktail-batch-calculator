@@ -8,10 +8,9 @@ Added an "Options" button next to the Ingredients section that allows users to t
 ### 1. Column Visibility Toggle
 - **Options Button**: Located next to "Add Ingredient" button
 - **Dropdown Menu**: Click to show/hide column options
-- **Three Toggle Options**:
-  - **Density (g/mL)**: Show/hide density input in ingredients table
-  - **Weight (g)**: Show/hide weight column in batch breakdown
-  - **Sugar (g/L)**: Show/hide sugar content input and calculations
+- **Two Toggle Options**:
+  - **Weight**: Shows "Density (g/L)" in ingredients and "Weight (g)" in batch breakdown
+  - **Sugar**: Shows "Sugar Conc. (g/L)" in ingredients and "Sugar (g)" in batch breakdown
 
 ### 2. Sugar Content Tracking
 - **Input Field**: Sugar content in grams per liter (g/L) for each ingredient
@@ -29,6 +28,7 @@ All columns are hidden by default to keep the interface clean and focused on the
 ### Ingredient Type
 ```typescript
 interface Ingredient {
+  densityGPerL: number; // g/L (e.g., 940 for spirits, 1000 for water)
   sugarGPerL?: number; // g/L - sugar content
 }
 ```
@@ -51,9 +51,8 @@ interface BatchResult {
 ### ColumnVisibility Type
 ```typescript
 interface ColumnVisibility {
-  density: boolean;
-  weight: boolean;
-  sugar: boolean;
+  weight: boolean;  // Controls both density input and weight output
+  sugar: boolean;   // Controls both sugar conc. input and sugar output
 }
 ```
 
@@ -69,5 +68,10 @@ interface ColumnVisibility {
 - **State Management**: Column visibility state managed in App.tsx
 - **Props Drilling**: Visibility settings passed to IngredientList, IngredientInput, and ResultsTable
 - **Conditional Rendering**: Table columns conditionally rendered based on visibility state
-- **Calculations**: Sugar calculations integrated into existing batch calculation logic
+- **Calculations**: 
+  - Density converted from g/L to g/mL (÷1000) for weight calculations
+  - Sugar calculations integrated into existing batch calculation logic
 - **Click Outside**: Options dropdown closes when clicking outside
+- **Default Values**: 
+  - Density: 1000 g/L (water equivalent)
+  - Common values: Spirits ~940 g/L, Vermouth ~980 g/L, Water 1000 g/L
