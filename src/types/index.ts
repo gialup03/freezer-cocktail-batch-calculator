@@ -4,6 +4,7 @@ export interface Ingredient {
   ratio: number; // e.g., 3 for gin in 3:1 martini
   abv: number;   // 0-100 (e.g., 40 for 40% ABV)
   density: number; // g/mL (e.g., 0.95 for vodka, 1.0 for water)
+  sugarGPerL?: number; // g/L (e.g., 100 for 100g sugar per liter)
 }
 
 export interface BatchConfig {
@@ -16,6 +17,7 @@ export interface IngredientCalculation {
   volumeMl: number;
   volumeOz: number;
   weightG: number;
+  sugarG?: number; // total sugar in grams for this ingredient
 }
 
 export interface BatchResult {
@@ -23,4 +25,12 @@ export interface BatchResult {
   finalAbv: number;
   waterMl: number; // amount of water being added
   totalVolumeMl: number; // total including dilution
+  totalSugarG?: number; // total sugar in grams across all ingredients
+  sugarGPerL?: number; // sugar concentration in final drink
+}
+
+export interface ColumnVisibility {
+  density: boolean;
+  weight: boolean;
+  sugar: boolean;
 }

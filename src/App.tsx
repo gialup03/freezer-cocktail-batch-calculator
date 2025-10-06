@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Ingredient } from './types';
+import type { Ingredient, ColumnVisibility } from './types';
 import { calculateBatch } from './utils/calculations';
 import { IngredientList } from './components/IngredientList';
 import { BatchConfig } from './components/BatchConfig';
@@ -14,6 +14,11 @@ function App() {
   ]);
   const [batchSizeMl, setBatchSizeMl] = useState(750);
   const [dilutionPercent, setDilutionPercent] = useState(0);
+  const [columnVisibility, setColumnVisibility] = useState<ColumnVisibility>({
+    density: false,
+    weight: false,
+    sugar: false
+  });
   
   const result = calculateBatch(ingredients, { batchSizeMl, dilutionPercent });
   
@@ -35,6 +40,8 @@ function App() {
           <IngredientList 
             ingredients={ingredients}
             onChange={setIngredients}
+            columnVisibility={columnVisibility}
+            onColumnVisibilityChange={setColumnVisibility}
           />
         </section>
         
@@ -62,7 +69,12 @@ function App() {
             </section>
             
             <section>
-              <ResultsTable calculations={result.ingredients} />
+              <ResultsTable 
+                calculations={result.ingredients} 
+                columnVisibility={columnVisibility}
+                totalSugarG={result.totalSugarG}
+                sugarGPerL={result.sugarGPerL}
+              />
             </section>
           </>
         )}

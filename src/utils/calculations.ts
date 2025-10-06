@@ -10,7 +10,9 @@ export function calculateBatch(
       ingredients: [],
       finalAbv: 0,
       waterMl: 0,
-      totalVolumeMl: config.batchSizeMl
+      totalVolumeMl: config.batchSizeMl,
+      totalSugarG: undefined,
+      sugarGPerL: undefined
     };
   }
 
@@ -22,7 +24,9 @@ export function calculateBatch(
       ingredients: [],
       finalAbv: 0,
       waterMl: 0,
-      totalVolumeMl: config.batchSizeMl
+      totalVolumeMl: config.batchSizeMl,
+      totalSugarG: undefined,
+      sugarGPerL: undefined
     };
   }
   
@@ -32,12 +36,14 @@ export function calculateBatch(
     const volumeMl = (ing.ratio / totalRatio) * baseVolumeMl;
     const volumeOz = volumeMl * 0.033814; // mL to oz conversion
     const weightG = volumeMl * ing.density;
+    const sugarG = ing.sugarGPerL ? (volumeMl / 1000) * ing.sugarGPerL : undefined;
     
     return { 
       ingredient: ing, 
       volumeMl: Math.round(volumeMl * 10) / 10, 
       volumeOz: Math.round(volumeOz * 100) / 100, 
-      weightG: Math.round(weightG * 10) / 10 
+      weightG: Math.round(weightG * 10) / 10,
+      sugarG: sugarG !== undefined ? Math.round(sugarG * 10) / 10 : undefined
     };
   });
   
@@ -59,6 +65,13 @@ export function calculateBatch(
   const totalVolumeMl = baseVolumeMl + waterMl;
   const finalAbv = (totalAlcoholMl / totalVolumeMl) * 100;
   
+  // Calculate total sugar
+  const totalSugarG = calculations.reduce(
+    (sum, calc) => sum + (calc.sugarG || 0),
+    0
+  );
+  const sugarGPerL = totalVolumeMl > 0 ? (totalSugarG / totalVolumeMl) * 1000 : undefined;
+  
   // 6. Add water as a separate calculation if there's dilution
   let finalCalculations = [...calculations];
   if (waterMl > 0) {
@@ -75,7 +88,8 @@ export function calculateBatch(
       },
       volumeMl: Math.round(waterMl * 10) / 10,
       volumeOz: Math.round(waterOz * 100) / 100,
-      weightG: Math.round(waterWeight * 10) / 10
+      weightG: Math.round(waterWeight * 10) / 10,
+      sugarG: undefined
     });
   }
   
@@ -83,6 +97,8 @@ export function calculateBatch(
     ingredients: finalCalculations, 
     finalAbv: Math.round(finalAbv * 10) / 10,
     waterMl: waterMl,
-    totalVolumeMl: totalVolumeMl
+    totalVolumeMl: totalVolumeMl,
+    totalSugarG: totalSugarG > 0 ? Math.round(totalSugarG * 10) / 10 : undefined,
+    sugarGPerL: sugarGPerL !== undefined && sugarGPerL > 0 ? Math.round(sugarGPerL * 10) / 10 : undefined
   };
 }

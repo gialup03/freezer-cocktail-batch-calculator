@@ -13,7 +13,6 @@ export function DilutionControl({
   dilutionPercent, 
   onChange, 
   finalAbv,
-  waterMl,
   ingredients 
 }: DilutionControlProps) {
   const showFreezeWarning = finalAbv < 30;
