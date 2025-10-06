@@ -9,8 +9,8 @@ import { ResultsTable } from './components/ResultsTable';
 
 function App() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([
-    { id: '1', name: 'Gin', ratio: 3, abv: 40, densityGPerL: 940 },
-    { id: '2', name: 'Dry Vermouth', ratio: 1, abv: 18, densityGPerL: 980 },
+    { id: '1', name: 'Gin', ratio: 3, abv: 40, densityGPerL: 940, sugarGPerL: 0 },
+    { id: '2', name: 'Dry Vermouth', ratio: 1, abv: 18, densityGPerL: 980, sugarGPerL: 40 },
   ]);
   const [batchSizeMl, setBatchSizeMl] = useState(750);
   const [dilutionPercent, setDilutionPercent] = useState(0);
