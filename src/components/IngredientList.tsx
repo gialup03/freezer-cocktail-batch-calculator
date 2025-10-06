@@ -47,15 +47,36 @@ export function IngredientList({ ingredients, onChange }: IngredientListProps) {
           <p className="text-slate-500">No ingredients added yet. Click "Add Ingredient" to start.</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {ingredients.map((ingredient, index) => (
-            <IngredientInput
-              key={ingredient.id}
-              ingredient={ingredient}
-              onChange={(updated) => updateIngredient(index, updated)}
-              onDelete={() => deleteIngredient(index)}
-            />
-          ))}
+        <div className="border border-slate-200 rounded-lg overflow-hidden bg-white">
+          <table className="w-full">
+            <thead className="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
+                  Ingredient Name
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
+                  Ratio
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
+                  ABV (%)
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">
+                  Density (g/mL)
+                </th>
+                <th className="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {ingredients.map((ingredient, index) => (
+                <IngredientInput
+                  key={ingredient.id}
+                  ingredient={ingredient}
+                  onChange={(updated) => updateIngredient(index, updated)}
+                  onDelete={() => deleteIngredient(index)}
+                />
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
