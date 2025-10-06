@@ -9,7 +9,8 @@ export function calculateBatch(
     return {
       ingredients: [],
       finalAbv: 0,
-      dilutionSuggestion: { needsDilution: false }
+      waterMl: 0,
+      totalVolumeMl: config.batchSizeMl
     };
   }
 
@@ -20,13 +21,15 @@ export function calculateBatch(
     return {
       ingredients: [],
       finalAbv: 0,
-      dilutionSuggestion: { needsDilution: false }
+      waterMl: 0,
+      totalVolumeMl: config.batchSizeMl
     };
   }
   
-  // 2. Calculate per-ingredient volumes
+  // 2. Calculate base ingredient volumes (before dilution)
+  const baseVolumeMl = config.batchSizeMl;
   const calculations: IngredientCalculation[] = ingredients.map(ing => {
-    const volumeMl = (ing.ratio / totalRatio) * config.batchSizeMl;
+    const volumeMl = (ing.ratio / totalRatio) * baseVolumeMl;
     const volumeOz = volumeMl * 0.033814; // mL to oz conversion
     const weightG = volumeMl * ing.density;
     
@@ -38,36 +41,48 @@ export function calculateBatch(
     };
   });
   
-  // 3. Calculate weighted ABV
+  // 3. Calculate total alcohol content from base ingredients
   const totalAlcoholMl = calculations.reduce(
     (sum, calc) => sum + (calc.volumeMl * calc.ingredient.abv / 100),
     0
   );
-  const finalAbv = (totalAlcoholMl / config.batchSizeMl) * 100;
   
-  // 4. Suggest dilution if ABV > 33%
-  const dilutionSuggestion = calculateDilution(finalAbv, config.batchSizeMl);
+  // 4. Calculate water to add based on dilution percentage
+  // dilutionPercent represents the percentage of FINAL volume that should be water
+  // So: waterMl / totalVolumeMl = dilutionPercent / 100
+  // Therefore: waterMl = (baseVolume * dilutionPercent) / (100 - dilutionPercent)
+  const waterMl = config.dilutionPercent > 0 
+    ? Math.round((baseVolumeMl * config.dilutionPercent) / (100 - config.dilutionPercent))
+    : 0;
   
-  return { 
-    ingredients: calculations, 
-    finalAbv: Math.round(finalAbv * 10) / 10, 
-    dilutionSuggestion 
-  };
-}
-
-function calculateDilution(currentAbv: number, currentVolumeMl: number) {
-  const targetAbv = 31.5; // midpoint of 30-33% target
+  // 5. Calculate final ABV with dilution
+  const totalVolumeMl = baseVolumeMl + waterMl;
+  const finalAbv = (totalAlcoholMl / totalVolumeMl) * 100;
   
-  if (currentAbv <= 33) {
-    return { needsDilution: false };
+  // 6. Add water as a separate calculation if there's dilution
+  let finalCalculations = [...calculations];
+  if (waterMl > 0) {
+    const waterOz = waterMl * 0.033814;
+    const waterWeight = waterMl * 1.0; // density of water is 1.0
+    
+    finalCalculations.push({
+      ingredient: {
+        id: 'water',
+        name: 'Water (dilution)',
+        ratio: 0, // Water is not part of the base ratio
+        abv: 0,
+        density: 1.0
+      },
+      volumeMl: Math.round(waterMl * 10) / 10,
+      volumeOz: Math.round(waterOz * 100) / 100,
+      weightG: Math.round(waterWeight * 10) / 10
+    });
   }
   
-  // Formula: water_needed = (current_ABV - target_ABV) / target_ABV × current_volume
-  const waterMl = ((currentAbv - targetAbv) / targetAbv) * currentVolumeMl;
-  
-  return {
-    needsDilution: true,
-    waterMl: Math.round(waterMl),
-    targetAbv
+  return { 
+    ingredients: finalCalculations, 
+    finalAbv: Math.round(finalAbv * 10) / 10,
+    waterMl: waterMl,
+    totalVolumeMl: totalVolumeMl
   };
 }

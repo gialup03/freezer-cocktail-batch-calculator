@@ -4,7 +4,7 @@ import { calculateBatch } from './utils/calculations';
 import { IngredientList } from './components/IngredientList';
 import { BatchConfig } from './components/BatchConfig';
 import { AbvBadge } from './components/AbvBadge';
-import { DilutionSuggestion } from './components/DilutionSuggestion';
+import { DilutionControl } from './components/DilutionControl';
 import { ResultsTable } from './components/ResultsTable';
 
 function App() {
@@ -13,39 +13,9 @@ function App() {
     { id: '2', name: 'Dry Vermouth', ratio: 1, abv: 18, density: 0.98 },
   ]);
   const [batchSizeMl, setBatchSizeMl] = useState(750);
+  const [dilutionPercent, setDilutionPercent] = useState(0);
   
-  const result = calculateBatch(ingredients, { batchSizeMl });
-  
-  const handleApplyDilution = () => {
-    if (result.dilutionSuggestion.needsDilution && result.dilutionSuggestion.waterMl) {
-      // Check if water already exists
-      const hasWater = ingredients.some(ing => ing.name.toLowerCase() === 'water');
-      if (hasWater) {
-        alert('Water ingredient already exists. Please adjust it manually.');
-        return;
-      }
-      
-      // Calculate water ratio based on current total and suggested water volume
-      const currentTotalRatio = ingredients.reduce((sum, ing) => sum + ing.ratio, 0);
-      const currentVolume = batchSizeMl;
-      const waterVolume = result.dilutionSuggestion.waterMl;
-      const waterRatio = (waterVolume / currentVolume) * currentTotalRatio;
-      
-      // Add water to ingredients
-      const waterIngredient: Ingredient = {
-        id: Date.now().toString(),
-        name: 'Water',
-        ratio: Math.round(waterRatio * 100) / 100,
-        abv: 0,
-        density: 1.0
-      };
-      
-      setIngredients([...ingredients, waterIngredient]);
-      
-      // Increase batch size to account for added water
-      setBatchSizeMl(currentVolume + waterVolume);
-    }
-  };
+  const result = calculateBatch(ingredients, { batchSizeMl, dilutionPercent });
   
   return (
     <div className="min-h-screen bg-white">
@@ -68,20 +38,26 @@ function App() {
           />
         </section>
         
-        <section className="mb-8">
-          <BatchConfig 
-            batchSizeMl={batchSizeMl}
-            onChange={setBatchSizeMl}
-          />
-        </section>
-        
         {ingredients.length > 0 && batchSizeMl > 0 && (
           <>
             <section className="mb-8">
+              <DilutionControl
+                dilutionPercent={dilutionPercent}
+                onChange={setDilutionPercent}
+                finalAbv={result.finalAbv}
+                waterMl={result.waterMl}
+                ingredients={ingredients}
+              />
+            </section>
+            
+            <section className="mb-8">
               <AbvBadge abv={result.finalAbv} />
-              <DilutionSuggestion 
-                suggestion={result.dilutionSuggestion} 
-                onApplyDilution={handleApplyDilution}
+            </section>
+            
+            <section className="mb-8">
+              <BatchConfig 
+                batchSizeMl={batchSizeMl}
+                onChange={setBatchSizeMl}
               />
             </section>
             

@@ -8,6 +8,7 @@ export interface Ingredient {
 
 export interface BatchConfig {
   batchSizeMl: number; // total batch size in mL
+  dilutionPercent: number; // 0-100, percentage of final volume that is water
 }
 
 export interface IngredientCalculation {
@@ -20,9 +21,6 @@ export interface IngredientCalculation {
 export interface BatchResult {
   ingredients: IngredientCalculation[];
   finalAbv: number;
-  dilutionSuggestion: {
-    needsDilution: boolean;
-    waterMl?: number;
-    targetAbv?: number;
-  };
+  waterMl: number; // amount of water being added
+  totalVolumeMl: number; // total including dilution
 }
