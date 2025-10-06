@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { IngredientCalculation, ColumnVisibility } from '../types';
 
 interface ServingInfoProps {
@@ -6,13 +6,18 @@ interface ServingInfoProps {
   finalAbv: number;
   calculations: IngredientCalculation[];
   columnVisibility: ColumnVisibility;
+  defaultServingSizeMl?: number;
 }
 
-export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibility }: ServingInfoProps) {
+export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibility, defaultServingSizeMl }: ServingInfoProps) {
   // Calculate default serving size for 3 UK units
   // UK units = (volume * ABV / 100) / 10
   // For 3 units: volume = 3000 / ABV
   const calculateDefaultVolume = () => {
+    // Use provided default if available
+    if (defaultServingSizeMl !== undefined) {
+      return defaultServingSizeMl;
+    }
     const idealVolume = 3000 / finalAbv;
     // Round to nearest 5ml increment
     const rounded = Math.round(idealVolume / 5) * 5;
@@ -25,6 +30,14 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
 
   const [servingsCount, setServingsCount] = useState(defaultServings);
   const [servingVolumeMl, setServingVolumeMl] = useState(defaultVolume);
+
+  // Update serving size when defaultServingSizeMl changes (from recipe selection)
+  useEffect(() => {
+    if (defaultServingSizeMl !== undefined) {
+      setServingVolumeMl(defaultServingSizeMl);
+      setServingsCount(Math.round(batchSizeMl / defaultServingSizeMl));
+    }
+  }, [defaultServingSizeMl, batchSizeMl]);
 
   // Calculate min and max servings based on 200ml max serving and 50ml min serving
   const minServings = Math.ceil(batchSizeMl / 200);

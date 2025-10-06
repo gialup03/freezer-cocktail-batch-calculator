@@ -15,6 +15,7 @@ function App() {
   ]);
   const [batchSizeMl, setBatchSizeMl] = useState(750);
   const [dilutionPercent, setDilutionPercent] = useState(0);
+  const [servingSizeMl, setServingSizeMl] = useState<number | undefined>(undefined);
   const [columnVisibility, setColumnVisibility] = useState<ColumnVisibility>({
     weight: false,
     sugar: false
@@ -92,7 +93,7 @@ function App() {
             onChange={setIngredients}
             columnVisibility={columnVisibility}
             onDilutionChange={setDilutionPercent}
-            onBatchSizeChange={setBatchSizeMl}
+            onServingSizeChange={setServingSizeMl}
           />
         </section>
         
@@ -133,6 +134,7 @@ function App() {
                 finalAbv={result.finalAbv}
                 calculations={result.ingredients}
                 columnVisibility={columnVisibility}
+                defaultServingSizeMl={servingSizeMl}
               />
             </section>
           </>

@@ -11,7 +11,7 @@ interface IngredientListProps {
   onChange: (ingredients: Ingredient[]) => void;
   columnVisibility: ColumnVisibility;
   onDilutionChange?: (dilution: number) => void;
-  onBatchSizeChange?: (batchSize: number) => void;
+  onServingSizeChange?: (servingSize: number) => void;
 }
 
 export function IngredientList({ 
@@ -19,7 +19,7 @@ export function IngredientList({
   onChange, 
   columnVisibility,
   onDilutionChange,
-  onBatchSizeChange
+  onServingSizeChange
 }: IngredientListProps) {
 
   const addIngredient = (name: string = '') => {
@@ -75,8 +75,8 @@ export function IngredientList({
     }
     
     // Set default serving size if provided
-    if (recipe.servingSizeMl !== undefined && onBatchSizeChange) {
-      onBatchSizeChange(recipe.servingSizeMl);
+    if (recipe.servingSizeMl !== undefined && onServingSizeChange) {
+      onServingSizeChange(recipe.servingSizeMl);
     }
   };
 
