@@ -89,9 +89,6 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
   
   // Calculate preparation dilution volume based on base volume
   const preparationDilutionMl = baseVolumeMl * (dilutionPercent / 100);
-  
-  // Final serving volume includes preparation dilution
-  const finalServingVolumeMl = baseVolumeMl + preparationDilutionMl;
 
   // Calculate alcohol per serving (based on batch ABV and base volume)
   const pureAlcoholMlPerServing = baseVolumeMl * (finalAbv / 100);

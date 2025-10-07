@@ -9,9 +9,6 @@ import { ServingInfo } from './components/ServingInfo';
 import type { PreparationMethod } from './utils/recipeTemplates';
 
 function App() {
-  // Detect if device is mobile (screen width < 768px is typical mobile breakpoint)
-  const isMobile = () => window.innerWidth < 768;
-  
   const [ingredients, setIngredients] = useState<Ingredient[]>([
     { id: '1', name: 'Gin', ratio: 3, abv: 40, densityGPerL: 940, sugarGPerL: 0 },
     { id: '2', name: 'Dry Vermouth', ratio: 1, abv: 18, densityGPerL: 980, sugarGPerL: 40 },
