@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { IngredientCalculation, ColumnVisibility } from '../types';
+import { formatOzAsFraction } from '../utils/formatOz';
 
 interface ServingInfoProps {
   batchSizeMl: number;
@@ -68,62 +69,60 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
   const totalWeightGPerServing = ingredientsPerServing.reduce((sum, ing) => sum + ing.weightG, 0);
   const totalSugarGPerServing = ingredientsPerServing.reduce((sum, ing) => sum + (ing.sugarG || 0), 0);
 
-  const roundToQuarterOz = (oz: number) => Math.round(oz / 0.25) * 0.25;
-
   return (
-    <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
-      <h2 className="text-2xl font-semibold text-slate-900 mb-4">Serving Information</h2>
+    <div className="space-y-4">
+      <h2 className="text-2xl font-semibold text-slate-900">Serving Information</h2>
       
-      <div className="mb-6 max-w-2xl">
-        <div className="flex justify-between items-baseline mb-2">
-          <label className="text-sm font-medium text-slate-600">
-            Serving Volume
-          </label>
-          <span className="text-lg font-semibold text-slate-900">
-            {Math.round(servingVolumeMl)} mL ({roundToQuarterOz(servingVolumeMl / 29.5735).toFixed(2)} oz)
-          </span>
+      <div className="border border-slate-200 rounded-lg bg-white p-6">
+        <div className="mb-6">
+          <div className="flex justify-between items-baseline mb-2">
+            <label className="text-sm font-medium text-slate-600">
+              Serving Volume
+            </label>
+            <span className="text-lg font-semibold text-slate-900">
+              {Math.round(servingVolumeMl)} mL ({formatOzAsFraction(servingVolumeMl / 29.5735)} oz)
+            </span>
+          </div>
+          <input
+            type="range"
+            min="50"
+            max="200"
+            step="5"
+            value={Math.round(servingVolumeMl)}
+            onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            style={{
+              background: `linear-gradient(to right, #2563eb 0%, #2563eb ${((Math.round(servingVolumeMl) - 50) / 150) * 100}%, #e2e8f0 ${((Math.round(servingVolumeMl) - 50) / 150) * 100}%, #e2e8f0 100%)`
+            }}
+          />
+          <div className="flex justify-between text-xs text-slate-500 mt-1">
+            <span>50 mL</span>
+            <span>200 mL</span>
+          </div>
         </div>
-        <input
-          type="range"
-          min="50"
-          max="200"
-          step="5"
-          value={Math.round(servingVolumeMl)}
-          onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-          style={{
-            background: `linear-gradient(to right, #2563eb 0%, #2563eb ${((Math.round(servingVolumeMl) - 50) / 150) * 100}%, #e2e8f0 ${((Math.round(servingVolumeMl) - 50) / 150) * 100}%, #e2e8f0 100%)`
-          }}
-        />
-        <div className="flex justify-between text-xs text-slate-500 mt-1">
-          <span>50 mL</span>
-          <span>200 mL</span>
+
+        <div className="mb-6">
+          <p className="text-sm text-slate-600">
+            {ukUnitsPerServing.toFixed(1)} UK alcohol units per serving
+          </p>
+          <p className="text-sm text-slate-600">
+            {Math.round(servingsCount)} servings in batch
+          </p>
         </div>
       </div>
 
-      <div className="mb-6 max-w-2xl">
-        <p className="text-sm text-slate-600">
-          {ukUnitsPerServing.toFixed(1)} UK alcohol units per serving
-        </p>
-        <p className="text-sm text-slate-600">
-          {Math.round(servingsCount)} servings in batch
-        </p>
-      </div>
-
-      <div>
-        <h3 className="text-lg font-semibold text-slate-900 mb-3">Breakdown per Serving</h3>
-        <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+      <div className="border border-slate-200 rounded-lg overflow-x-auto bg-white">
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="text-left py-2 px-4 text-sm font-semibold text-slate-700">Ingredient</th>
-                <th className="text-right py-2 px-4 text-sm font-semibold text-slate-700">Volume (mL)</th>
-                <th className="text-right py-2 px-4 text-sm font-semibold text-slate-700">Volume (oz)</th>
+                <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700">Ingredient</th>
+                <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Volume (mL)</th>
+                <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Volume (oz)</th>
                 {columnVisibility.weight && (
-                  <th className="text-right py-2 px-4 text-sm font-semibold text-slate-700">Weight (g)</th>
+                  <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Weight (g)</th>
                 )}
                 {columnVisibility.sugar && (
-                  <th className="text-right py-2 px-4 text-sm font-semibold text-slate-700">Sugar (g)</th>
+                  <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Sugar (g)</th>
                 )}
               </tr>
             </thead>
@@ -133,37 +132,36 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
                   key={index}
                   className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}
                 >
-                  <td className="py-2 px-4 border-b border-slate-200 text-sm">{ingredient.name}</td>
-                  <td className="text-right py-2 px-4 border-b border-slate-200 text-sm">{ingredient.volumeMl.toFixed(1)}</td>
-                  <td className="text-right py-2 px-4 border-b border-slate-200 text-sm">
-                    {roundToQuarterOz(ingredient.volumeOz).toFixed(2)}
+                  <td className="px-2 py-1.5 border-b border-slate-200 text-sm">{ingredient.name}</td>
+                  <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">{ingredient.volumeMl.toFixed(1)}</td>
+                  <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">
+                    {formatOzAsFraction(ingredient.volumeOz)}
                   </td>
                   {columnVisibility.weight && (
-                    <td className="text-right py-2 px-4 border-b border-slate-200 text-sm">{ingredient.weightG.toFixed(1)}</td>
+                    <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">{ingredient.weightG.toFixed(1)}</td>
                   )}
                   {columnVisibility.sugar && (
-                    <td className="text-right py-2 px-4 border-b border-slate-200 text-sm">
+                    <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">
                       {ingredient.sugarG !== undefined ? ingredient.sugarG.toFixed(1) : '-'}
                     </td>
                   )}
                 </tr>
               ))}
-              <tr className="bg-slate-100 font-semibold">
-                <td className="py-2 px-4 border-t-2 border-slate-300 text-sm">Total</td>
-                <td className="text-right py-2 px-4 border-t-2 border-slate-300 text-sm">{totalVolumeMlPerServing.toFixed(1)}</td>
-                <td className="text-right py-2 px-4 border-t-2 border-slate-300 text-sm">
-                  {roundToQuarterOz(totalVolumeOzPerServing).toFixed(2)}
+              <tr className="bg-slate-50 font-semibold">
+                <td className="px-2 py-1.5 border-t border-slate-200 text-sm">Total</td>
+                <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">{totalVolumeMlPerServing.toFixed(1)}</td>
+                <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">
+                  {formatOzAsFraction(totalVolumeOzPerServing)}
                 </td>
                 {columnVisibility.weight && (
-                  <td className="text-right py-2 px-4 border-t-2 border-slate-300 text-sm">{totalWeightGPerServing.toFixed(1)}</td>
+                  <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">{totalWeightGPerServing.toFixed(1)}</td>
                 )}
                 {columnVisibility.sugar && (
-                  <td className="text-right py-2 px-4 border-t-2 border-slate-300 text-sm">{totalSugarGPerServing.toFixed(1)}</td>
+                  <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">{totalSugarGPerServing.toFixed(1)}</td>
                 )}
               </tr>
             </tbody>
           </table>
-        </div>
       </div>
     </div>
   );
