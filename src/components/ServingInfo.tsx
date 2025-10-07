@@ -56,7 +56,12 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
   const ukUnitsPerServing = pureAlcoholMlPerServing / 10;
 
   // Calculate ingredient breakdown per serving
-  const ingredientsPerServing = calculations.map(calc => ({
+  // Filter out "Batch dilution" when batch mode is off
+  const filteredCalculations = batchMode 
+    ? calculations 
+    : calculations.filter(calc => calc.ingredient.name !== 'Batch dilution');
+  
+  const ingredientsPerServing = filteredCalculations.map(calc => ({
     name: calc.ingredient.name,
     volumeMl: calc.volumeMl / servingsCount,
     volumeOz: calc.volumeOz / servingsCount,
@@ -71,16 +76,16 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
   const totalSugarGPerServing = ingredientsPerServing.reduce((sum, ing) => sum + (ing.sugarG || 0), 0);
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-semibold text-slate-900">Serving Information</h2>
+    <div className="space-y-3">
+      <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Serving Information</h2>
       
-      <div className="border border-slate-200 rounded-lg bg-white p-6">
-        <div className="mb-6">
-          <div className="flex justify-between items-baseline mb-2">
-            <label className="text-sm font-medium text-slate-600">
+      <div className="border border-slate-200 rounded-lg bg-white p-3 sm:p-4">
+        <div className="mb-3">
+          <div className="flex justify-between items-baseline mb-1.5">
+            <label className="text-xs sm:text-sm font-medium text-slate-600">
               Serving Volume
             </label>
-            <span className="text-lg font-semibold text-slate-900">
+            <span className="text-sm sm:text-base font-semibold text-slate-900">
               {Math.round(servingVolumeMl)} mL ({formatOzAsFraction(servingVolumeMl / 29.5735)} oz)
             </span>
           </div>
@@ -102,12 +107,12 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
           </div>
         </div>
 
-        <div className="mb-6">
-          <p className="text-sm text-slate-600">
+        <div className="space-y-0.5 text-xs sm:text-sm text-slate-600">
+          <p>
             {ukUnitsPerServing.toFixed(1)} UK alcohol units per serving
           </p>
           {batchMode && (
-            <p className="text-sm text-slate-600">
+            <p>
               {Math.round(servingsCount)} servings in batch
             </p>
           )}
@@ -115,17 +120,17 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
       </div>
 
       <div className="border border-slate-200 rounded-lg overflow-x-auto bg-white">
-          <table className="w-full">
+          <table className="w-full text-xs sm:text-sm">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700">Ingredient</th>
-                <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Volume (mL)</th>
-                <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Volume (oz)</th>
+                <th className="px-1.5 sm:px-2 py-1 sm:py-1.5 text-left font-semibold text-slate-700">Ingredient</th>
+                <th className="px-1.5 sm:px-2 py-1 sm:py-1.5 text-right font-semibold text-slate-700">Vol (mL)</th>
+                <th className="px-1.5 sm:px-2 py-1 sm:py-1.5 text-right font-semibold text-slate-700">Vol (oz)</th>
                 {columnVisibility.weight && (
-                  <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Weight (g)</th>
+                  <th className="px-1.5 sm:px-2 py-1 sm:py-1.5 text-right font-semibold text-slate-700">Wt (g)</th>
                 )}
                 {columnVisibility.sugar && (
-                  <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Sugar (g)</th>
+                  <th className="px-1.5 sm:px-2 py-1 sm:py-1.5 text-right font-semibold text-slate-700">Sugar (g)</th>
                 )}
               </tr>
             </thead>
@@ -135,32 +140,32 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
                   key={index}
                   className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}
                 >
-                  <td className="px-2 py-1.5 border-b border-slate-200 text-sm">{ingredient.name}</td>
-                  <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">{ingredient.volumeMl.toFixed(1)}</td>
-                  <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">
+                  <td className="px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{ingredient.name}</td>
+                  <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{ingredient.volumeMl.toFixed(1)}</td>
+                  <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">
                     {formatOzAsFraction(ingredient.volumeOz)}
                   </td>
                   {columnVisibility.weight && (
-                    <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">{ingredient.weightG.toFixed(1)}</td>
+                    <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{ingredient.weightG.toFixed(1)}</td>
                   )}
                   {columnVisibility.sugar && (
-                    <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">
+                    <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">
                       {ingredient.sugarG !== undefined ? ingredient.sugarG.toFixed(1) : '-'}
                     </td>
                   )}
                 </tr>
               ))}
               <tr className="bg-slate-50 font-semibold">
-                <td className="px-2 py-1.5 border-t border-slate-200 text-sm">Total</td>
-                <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">{totalVolumeMlPerServing.toFixed(1)}</td>
-                <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">
+                <td className="px-1.5 sm:px-2 py-1 sm:py-1.5 border-t border-slate-200">Total</td>
+                <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-t border-slate-200">{totalVolumeMlPerServing.toFixed(1)}</td>
+                <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-t border-slate-200">
                   {formatOzAsFraction(totalVolumeOzPerServing)}
                 </td>
                 {columnVisibility.weight && (
-                  <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">{totalWeightGPerServing.toFixed(1)}</td>
+                  <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-t border-slate-200">{totalWeightGPerServing.toFixed(1)}</td>
                 )}
                 {columnVisibility.sugar && (
-                  <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">{totalSugarGPerServing.toFixed(1)}</td>
+                  <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-t border-slate-200">{totalSugarGPerServing.toFixed(1)}</td>
                 )}
               </tr>
             </tbody>

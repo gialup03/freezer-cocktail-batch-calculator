@@ -1,3 +1,5 @@
+import type { ServingStyle } from '../types';
+
 export interface RecipeIngredient {
   templateName: string; // matches name in ingredientTemplates
   ratio: number;
@@ -8,6 +10,7 @@ export interface RecipeTemplate {
   ingredients: RecipeIngredient[];
   dilutionPercent?: number; // Optional default dilution percentage
   servingSizeMl?: number; // Optional default serving size for single serving
+  servingStyle?: ServingStyle; // Optional default serving style
 }
 
 export const RECIPE_TEMPLATES: RecipeTemplate[] = [
@@ -19,6 +22,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
     ],
     dilutionPercent: 5, // Stirred, served up
     servingSizeMl: 90, // ~3 UK units at 32.8% ABV
+    servingStyle: 'up',
   },
   {
     name: 'Negroni',
@@ -29,6 +33,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
     ],
     dilutionPercent: 10, // Rocks cocktail
     servingSizeMl: 120, // ~3 UK units at 24.9% ABV
+    servingStyle: 'rocks',
   },
   {
     name: 'Manhattan',
@@ -39,6 +44,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
     ],
     dilutionPercent: 5, // Stirred, served up
     servingSizeMl: 90, // ~3 UK units at 34.3% ABV
+    servingStyle: 'up',
   },
   {
     name: 'Old Fashioned',
@@ -49,5 +55,6 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
     ],
     dilutionPercent: 10, // Rocks cocktail
     servingSizeMl: 90, // ~3 UK units at 36.1% ABV
+    servingStyle: 'rocks',
   },
 ];

@@ -45,8 +45,13 @@ export function calculateBatch(
     0
   );
   
-  // Apply dilution: if dilution is X%, then ingredients are (100-X)% of final volume
-  const ingredientsFraction = (100 - config.dilutionPercent) / 100;
+  // Apply dilution: dilutionPercent means "for every 100ml of base, add X ml water"
+  // Total parts = 100 (base) + dilutionPercent (water)
+  // Water fraction = dilutionPercent / (100 + dilutionPercent)
+  // Ingredients fraction = 100 / (100 + dilutionPercent)
+  const totalParts = 100 + config.dilutionPercent;
+  const ingredientsFraction = 100 / totalParts;
+  const waterFraction = config.dilutionPercent / totalParts;
   const finalAbv = undilutedAlcoholContent * ingredientsFraction;
   
   // Calculate sugar concentration
@@ -68,10 +73,12 @@ export function calculateBatch(
   let totalSugarG: number | undefined = undefined;
   
   if (config.batchSizeMl > 0) {
+    // Calculate water and ingredients volumes to fit batch size
     waterMl = config.dilutionPercent > 0 
-      ? Math.round((config.batchSizeMl * config.dilutionPercent / 100) * 10) / 10
+      ? Math.round((config.batchSizeMl * waterFraction) * 10) / 10
       : 0;
     
+    // Ingredients volume is the remainder to reach batch size
     const ingredientsVolumeMl = config.batchSizeMl - waterMl;
     
     calculations = ingredients.map(ing => {
@@ -91,7 +98,7 @@ export function calculateBatch(
     
     totalSugarG = calculations.reduce((sum, calc) => sum + (calc.sugarG || 0), 0);
     
-    // Add water to calculations if there's dilution
+    // Add batch dilution to calculations if there's dilution
     if (waterMl > 0) {
       const waterOz = waterMl * 0.033814;
       const waterWeight = waterMl * 1.0;
@@ -99,7 +106,7 @@ export function calculateBatch(
       calculations.push({
         ingredient: {
           id: 'water',
-          name: 'Water',
+          name: 'Batch dilution',
           ratio: 0,
           abv: 0,
           densityGPerL: 1000
@@ -116,7 +123,7 @@ export function calculateBatch(
     ingredients: calculations, 
     finalAbv: Math.round(finalAbv * 10) / 10,
     waterMl: waterMl,
-    totalVolumeMl: config.batchSizeMl,
+    totalVolumeMl: config.batchSizeMl, // Total equals batch size
     totalSugarG: totalSugarG !== undefined && totalSugarG > 0 ? Math.round(totalSugarG * 10) / 10 : undefined,
     sugarGPerL: sugarGPerL > 0 ? Math.round(sugarGPerL * 10) / 10 : undefined
   };

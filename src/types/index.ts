@@ -33,3 +33,11 @@ export interface ColumnVisibility {
   weight: boolean;
   sugar: boolean;
 }
+
+export type ServingStyle = 'up' | 'rocks' | 'crushed';
+
+export interface ServingStyleOption {
+  value: ServingStyle;
+  label: string;
+  description?: string;
+}

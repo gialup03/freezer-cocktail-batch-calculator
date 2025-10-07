@@ -56,7 +56,7 @@ export function TemplateSelector({ onSelect, onAddCustom }: TemplateSelectorProp
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 w-96 bg-white border border-slate-200 rounded-lg shadow-lg z-50 max-h-[500px] flex flex-col">
+        <div className="absolute top-full right-0 mt-2 w-72 sm:w-80 bg-white border border-slate-200 rounded-lg shadow-lg z-50 max-h-[500px] flex flex-col">
           {/* Search Bar */}
           <div className="p-3 border-b border-slate-200">
             <div className="relative">

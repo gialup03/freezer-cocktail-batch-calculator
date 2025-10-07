@@ -6,11 +6,9 @@ interface ResultsTableProps {
   columnVisibility: ColumnVisibility;
   totalSugarG?: number;
   sugarGPerL?: number;
-  batchSizeMl: number;
-  onBatchSizeChange: (batchSizeMl: number) => void;
 }
 
-export function ResultsTable({ calculations, columnVisibility, totalSugarG, batchSizeMl, onBatchSizeChange }: ResultsTableProps) {
+export function ResultsTable({ calculations, columnVisibility, totalSugarG }: ResultsTableProps) {
   if (calculations.length === 0) {
     return null;
   }
@@ -25,14 +23,15 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG, batc
   const ingredientsWithRatios = calculations.filter(calc => calc.ingredient.ratio > 0);
   const totalIngredientRatio = ingredientsWithRatios.reduce((sum, calc) => sum + calc.ingredient.ratio, 0);
   
-  const dilutionPercent = (calculations.find(c => c.ingredient.name === 'Water')?.volumeMl || 0) / batchSizeMl * 100;
+  const batchDilutionVolume = calculations.find(c => c.ingredient.name === 'Batch dilution')?.volumeMl || 0;
+  const dilutionPercent = totalVolumeMl > 0 ? (batchDilutionVolume / totalVolumeMl) * 100 : 0;
   const waterRatio = dilutionPercent > 0 && dilutionPercent < 100
     ? (dilutionPercent / (100 - dilutionPercent)) * totalIngredientRatio
     : 0;
   
   // Format ratio string - use exact ratio values as shown in ingredients section
   const formatRatio = (calc: IngredientCalculation): string => {
-    if (calc.ingredient.name === 'Water') {
+    if (calc.ingredient.name === 'Batch dilution') {
       if (waterRatio === 0) return '-';
       // Round to 2 decimal places and remove trailing zeros
       return parseFloat(waterRatio.toFixed(2)).toString();
@@ -49,38 +48,20 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG, batc
   const formattedTotalRatio = parseFloat(totalRatio.toFixed(2)).toString();
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-xl font-semibold text-slate-900">Batch Breakdown</h3>
-        <div className="flex items-center gap-3">
-          <label className="text-sm font-medium text-slate-600">
-            Batch Size (mL)
-          </label>
-          <input
-            type="number"
-            min="0"
-            step="50"
-            value={batchSizeMl}
-            onChange={(e) => onBatchSizeChange(parseFloat(e.target.value) || 0)}
-            className="w-32 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-            placeholder="e.g., 750"
-          />
-        </div>
-      </div>
-      
+    <div>
       <div className="border border-slate-200 rounded-lg overflow-x-auto bg-white">
-        <table className="w-full">
+        <table className="w-full text-xs sm:text-sm">
         <thead className="bg-slate-50 border-b border-slate-200">
           <tr>
-            <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700">Ingredient</th>
-            <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Ratio</th>
-            <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Volume (mL)</th>
-            <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Volume (oz)</th>
+            <th className="px-1.5 sm:px-2 py-1 sm:py-1.5 text-left font-semibold text-slate-700">Ingredient</th>
+            <th className="px-1.5 sm:px-2 py-1 sm:py-1.5 text-right font-semibold text-slate-700">Ratio</th>
+            <th className="px-1.5 sm:px-2 py-1 sm:py-1.5 text-right font-semibold text-slate-700">Vol (mL)</th>
+            <th className="px-1.5 sm:px-2 py-1 sm:py-1.5 text-right font-semibold text-slate-700">Vol (oz)</th>
             {columnVisibility.weight && (
-              <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Weight (g)</th>
+              <th className="px-1.5 sm:px-2 py-1 sm:py-1.5 text-right font-semibold text-slate-700">Wt (g)</th>
             )}
             {columnVisibility.sugar && (
-              <th className="px-2 py-1.5 text-right text-sm font-semibold text-slate-700">Sugar (g)</th>
+              <th className="px-1.5 sm:px-2 py-1 sm:py-1.5 text-right font-semibold text-slate-700">Sugar (g)</th>
             )}
           </tr>
         </thead>
@@ -90,30 +71,30 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG, batc
               key={calc.ingredient.id}
               className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}
             >
-              <td className="px-2 py-1.5 border-b border-slate-200 text-sm">{calc.ingredient.name || 'Unnamed'}</td>
-              <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">{formatRatio(calc)}</td>
-              <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">{calc.volumeMl.toFixed(0)}</td>
-              <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">{formatOzAsFraction(calc.volumeOz)}</td>
+              <td className="px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{calc.ingredient.name || 'Unnamed'}</td>
+              <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{formatRatio(calc)}</td>
+              <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{calc.volumeMl.toFixed(0)}</td>
+              <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{formatOzAsFraction(calc.volumeOz)}</td>
               {columnVisibility.weight && (
-                <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">{calc.weightG.toFixed(0)}</td>
+                <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{calc.weightG.toFixed(0)}</td>
               )}
               {columnVisibility.sugar && (
-                <td className="text-right px-2 py-1.5 border-b border-slate-200 text-sm">
+                <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">
                   {calc.sugarG !== undefined ? calc.sugarG.toFixed(0) : '-'}
                 </td>
               )}
             </tr>
           ))}
           <tr className="bg-slate-50 font-semibold">
-            <td className="px-2 py-1.5 border-t border-slate-200 text-sm">Total</td>
-            <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">{formattedTotalRatio}</td>
-            <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">{totalVolumeMl.toFixed(0)}</td>
-            <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">{formatOzAsFraction(totalVolumeOz)}</td>
+            <td className="px-1.5 sm:px-2 py-1 sm:py-1.5 border-t border-slate-200">Total</td>
+            <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-t border-slate-200">{formattedTotalRatio}</td>
+            <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-t border-slate-200">{totalVolumeMl.toFixed(0)}</td>
+            <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-t border-slate-200">{formatOzAsFraction(totalVolumeOz)}</td>
             {columnVisibility.weight && (
-              <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">{totalWeightG.toFixed(0)}</td>
+              <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-t border-slate-200">{totalWeightG.toFixed(0)}</td>
             )}
             {columnVisibility.sugar && (
-              <td className="text-right px-2 py-1.5 border-t border-slate-200 text-sm">
+              <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-t border-slate-200">
                 {totalSugarG !== undefined ? totalSugarG.toFixed(0) : '-'}
               </td>
             )}

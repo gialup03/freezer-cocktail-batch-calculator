@@ -1,7 +1,8 @@
-import type { Ingredient, ColumnVisibility } from '../types';
+import type { Ingredient, ColumnVisibility, ServingStyle } from '../types';
 import { IngredientInput } from './IngredientInput';
 import { TemplateSelector } from './TemplateSelector';
 import { RecipeTemplates } from './RecipeTemplates';
+import { ServingStyleSelector } from './ServingStyleSelector';
 import type { IngredientTemplate } from '../utils/ingredientTemplates';
 import { INGREDIENT_TEMPLATES } from '../utils/ingredientTemplates';
 import type { RecipeTemplate } from '../utils/recipeTemplates';
@@ -12,6 +13,8 @@ interface IngredientListProps {
   columnVisibility: ColumnVisibility;
   onDilutionChange?: (dilution: number) => void;
   onServingSizeChange?: (servingSize: number) => void;
+  servingStyle?: ServingStyle;
+  onServingStyleChange?: (style: ServingStyle) => void;
 }
 
 export function IngredientList({ 
@@ -19,7 +22,9 @@ export function IngredientList({
   onChange, 
   columnVisibility,
   onDilutionChange,
-  onServingSizeChange
+  onServingSizeChange,
+  servingStyle = 'up',
+  onServingStyleChange
 }: IngredientListProps) {
 
   const addIngredient = (name: string = '') => {
@@ -78,6 +83,11 @@ export function IngredientList({
     if (recipe.servingSizeMl !== undefined && onServingSizeChange) {
       onServingSizeChange(recipe.servingSizeMl);
     }
+    
+    // Set default serving style if provided
+    if (recipe.servingStyle !== undefined && onServingStyleChange) {
+      onServingStyleChange(recipe.servingStyle);
+    }
   };
 
   const updateIngredient = (index: number, updated: Ingredient) => {
@@ -107,45 +117,54 @@ export function IngredientList({
           <p className="text-slate-500">No ingredients added yet. Click "Add Ingredient" to start.</p>
         </div>
       ) : (
-        <div className="border border-slate-200 rounded-lg overflow-x-auto bg-white">
-          <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 min-w-[144px]">
-                  Ingredient Name
-                </th>
-                <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-[70px] min-w-[70px]">
-                  Ratio
-                </th>
-                <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-[85px] min-w-[85px]">
-                  ABV (%)
-                </th>
-                {columnVisibility.weight && (
-                  <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-28 min-w-28">
-                    Density (g/L)
+        <>
+          <div className="border border-slate-200 rounded-lg overflow-x-auto bg-white">
+            <table className="w-full">
+              <thead className="bg-slate-50 border-b border-slate-200">
+                <tr>
+                  <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 min-w-[144px]">
+                    Ingredient Name
                   </th>
-                )}
-                {columnVisibility.sugar && (
-                  <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-28 min-w-28">
-                    Sugar (g/L)
+                  <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-[70px] min-w-[70px]">
+                    Ratio
                   </th>
-                )}
-                <th className="px-2 py-1.5 w-6 min-w-6"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {ingredients.map((ingredient, index) => (
-                <IngredientInput
-                  key={ingredient.id}
-                  ingredient={ingredient}
-                  onChange={(updated) => updateIngredient(index, updated)}
-                  onDelete={() => deleteIngredient(index)}
-                  columnVisibility={columnVisibility}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-[85px] min-w-[85px]">
+                    ABV (%)
+                  </th>
+                  {columnVisibility.weight && (
+                    <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-28 min-w-28">
+                      Density (g/L)
+                    </th>
+                  )}
+                  {columnVisibility.sugar && (
+                    <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-28 min-w-28">
+                      Sugar (g/L)
+                    </th>
+                  )}
+                  <th className="px-2 py-1.5 w-6 min-w-6"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {ingredients.map((ingredient, index) => (
+                  <IngredientInput
+                    key={ingredient.id}
+                    ingredient={ingredient}
+                    onChange={(updated) => updateIngredient(index, updated)}
+                    onDelete={() => deleteIngredient(index)}
+                    columnVisibility={columnVisibility}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+          
+          {onServingStyleChange && (
+            <ServingStyleSelector 
+              value={servingStyle}
+              onChange={onServingStyleChange}
+            />
+          )}
+        </>
       )}
     </div>
   );
