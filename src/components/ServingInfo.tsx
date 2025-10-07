@@ -8,9 +8,10 @@ interface ServingInfoProps {
   calculations: IngredientCalculation[];
   columnVisibility: ColumnVisibility;
   defaultServingSizeMl?: number;
+  batchMode?: boolean;
 }
 
-export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibility, defaultServingSizeMl }: ServingInfoProps) {
+export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibility, defaultServingSizeMl, batchMode = true }: ServingInfoProps) {
   // Calculate default serving size for 3 UK units
   // UK units = (volume * ABV / 100) / 10
   // For 3 units: volume = 3000 / ABV
@@ -105,9 +106,11 @@ export function ServingInfo({ batchSizeMl, finalAbv, calculations, columnVisibil
           <p className="text-sm text-slate-600">
             {ukUnitsPerServing.toFixed(1)} UK alcohol units per serving
           </p>
-          <p className="text-sm text-slate-600">
-            {Math.round(servingsCount)} servings in batch
-          </p>
+          {batchMode && (
+            <p className="text-sm text-slate-600">
+              {Math.round(servingsCount)} servings in batch
+            </p>
+          )}
         </div>
       </div>
 

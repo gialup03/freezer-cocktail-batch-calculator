@@ -55,7 +55,7 @@ export function AbvBadge({ abv, sugarGPerL, showSugar }: AbvBadgeProps) {
   return (
     <div className={showSugarBox ? "grid grid-cols-1 md:grid-cols-2 gap-4" : ""}>
       <div className={`text-center py-6 rounded-lg border-2 ${getColorClass()}`}>
-        <div className="text-sm font-medium uppercase tracking-wide mb-1">Final ABV</div>
+        <div className="text-sm font-medium uppercase tracking-wide mb-1">Batch ABV</div>
         <div className="text-5xl font-bold">{abv.toFixed(1)}%</div>
         {abv >= 33 ? (
           <div className="mt-2 text-sm">Optimal freezer range</div>
@@ -68,7 +68,7 @@ export function AbvBadge({ abv, sugarGPerL, showSugar }: AbvBadgeProps) {
       
       {showSugarBox && sugarStyle && (
         <div className={`text-center py-6 rounded-lg border-2 ${sugarStyle.colorClass}`}>
-          <div className="text-sm font-medium uppercase tracking-wide mb-1">Sugar Concentration</div>
+          <div className="text-sm font-medium uppercase tracking-wide mb-1">Batch Sugar Concentration</div>
           <div className="text-5xl font-bold">{sugarGPerL.toFixed(0)} g/L</div>
           <div className="mt-2 text-sm">{sugarStyle.label}</div>
         </div>

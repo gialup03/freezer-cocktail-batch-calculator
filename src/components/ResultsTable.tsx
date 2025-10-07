@@ -51,7 +51,7 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG, batc
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold text-slate-900">Batch Breakdown</h2>
+        <h3 className="text-xl font-semibold text-slate-900">Batch Breakdown</h3>
         <div className="flex items-center gap-3">
           <label className="text-sm font-medium text-slate-600">
             Batch Size (mL)
