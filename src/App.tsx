@@ -6,6 +6,7 @@ import { IngredientList } from './components/IngredientList';
 import { DilutionControl } from './components/DilutionControl';
 import { ResultsTable } from './components/ResultsTable';
 import { ServingInfo } from './components/ServingInfo';
+import type { PreparationMethod } from './utils/recipeTemplates';
 
 function App() {
   // Detect if device is mobile (screen width < 768px is typical mobile breakpoint)
@@ -15,11 +16,12 @@ function App() {
     { id: '1', name: 'Gin', ratio: 3, abv: 40, densityGPerL: 940, sugarGPerL: 0 },
     { id: '2', name: 'Dry Vermouth', ratio: 1, abv: 18, densityGPerL: 980, sugarGPerL: 40 },
   ]);
-  const [batchMode, setBatchMode] = useState(true);
+  const [batchMode, setBatchMode] = useState(false);
   const [batchSizeMl, setBatchSizeMl] = useState(750);
   const [dilutionPercent, setDilutionPercent] = useState(5); // Default to Martini's dilution
   const [servingSizeMl, setServingSizeMl] = useState<number | undefined>(undefined);
   const [servingStyle, setServingStyle] = useState<ServingStyle>('up');
+  const [preparationMethod, setPreparationMethod] = useState<PreparationMethod | undefined>(undefined);
 
   // Reset dilution to 0 when batch mode is turned off
   useEffect(() => {
@@ -121,6 +123,7 @@ function App() {
             onServingSizeChange={setServingSizeMl}
             servingStyle={servingStyle}
             onServingStyleChange={setServingStyle}
+            onPreparationMethodChange={setPreparationMethod}
           />
         </section>
         
@@ -130,7 +133,7 @@ function App() {
               <section className="mb-4 sm:mb-6">
                 <div className="border border-slate-200 rounded-lg p-4 sm:p-6 bg-white shadow-sm">
                   <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
-                    <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Batch Information</h2>
+                    <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Batch Options</h2>
                     <div className="flex items-center gap-2 sm:gap-3">
                       <label className="text-xs sm:text-sm font-medium text-slate-600">
                         Batch Size (mL)
@@ -177,6 +180,7 @@ function App() {
                 columnVisibility={columnVisibility}
                 defaultServingSizeMl={servingSizeMl}
                 batchMode={batchMode}
+                defaultPreparationMethod={preparationMethod}
               />
             </section>
           </>

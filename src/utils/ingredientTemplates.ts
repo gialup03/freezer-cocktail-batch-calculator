@@ -63,6 +63,27 @@ export const INGREDIENT_TEMPLATES: IngredientTemplate[] = [
   { name: 'Grenadine', category: 'Syrup', abv: 0, densityGPerL: 1300, sugarGPerL: 600 },
   { name: 'Orgeat', category: 'Syrup', abv: 0, densityGPerL: 1250, sugarGPerL: 550 },
   { name: 'Falernum', category: 'Syrup', abv: 11, densityGPerL: 1150, sugarGPerL: 450 },
+  
+  // Juices (Fresh/Cold-Pressed)
+  { name: 'Lime Juice', category: 'Juice', abv: 0, densityGPerL: 1020, sugarGPerL: 10 },
+  { name: 'Lemon Juice', category: 'Juice', abv: 0, densityGPerL: 1020, sugarGPerL: 12 },
+  { name: 'Orange Juice', category: 'Juice', abv: 0, densityGPerL: 1045, sugarGPerL: 85 },
+  { name: 'Grapefruit Juice', category: 'Juice', abv: 0, densityGPerL: 1040, sugarGPerL: 70 },
+  { name: 'Pineapple Juice', category: 'Juice', abv: 0, densityGPerL: 1055, sugarGPerL: 100 },
+  { name: 'Cranberry Juice', category: 'Juice', abv: 0, densityGPerL: 1045, sugarGPerL: 100 },
+  { name: 'Tomato Juice', category: 'Juice', abv: 0, densityGPerL: 1020, sugarGPerL: 35 },
+  
+  // Wine & Bubbles
+  { name: 'Prosecco', category: 'Wine & Bubbles', abv: 11, densityGPerL: 990, sugarGPerL: 15 },
+  { name: 'Champagne', category: 'Wine & Bubbles', abv: 12, densityGPerL: 990, sugarGPerL: 10 },
+  { name: 'Dry White Wine', category: 'Wine & Bubbles', abv: 12, densityGPerL: 990, sugarGPerL: 5 },
+  
+  // Non-Alcoholic Mixers
+  { name: 'Soda Water', category: 'Mixer', abv: 0, densityGPerL: 1000, sugarGPerL: 0 },
+  { name: 'Tonic Water', category: 'Mixer', abv: 0, densityGPerL: 1040, sugarGPerL: 85 },
+  { name: 'Ginger Beer', category: 'Mixer', abv: 0, densityGPerL: 1040, sugarGPerL: 100 },
+  { name: 'Cola', category: 'Mixer', abv: 0, densityGPerL: 1040, sugarGPerL: 105 },
+  { name: 'Espresso', category: 'Mixer', abv: 0, densityGPerL: 1000, sugarGPerL: 0 },
 ];
 
 export const INGREDIENT_CATEGORIES = [
@@ -72,6 +93,9 @@ export const INGREDIENT_CATEGORIES = [
   'Fortified Wine',
   'Bitters',
   'Syrup',
+  'Juice',
+  'Wine & Bubbles',
+  'Mixer',
 ] as const;
 
 export type IngredientCategory = typeof INGREDIENT_CATEGORIES[number];

@@ -106,7 +106,7 @@ export function calculateBatch(
       calculations.push({
         ingredient: {
           id: 'water',
-          name: 'Batch dilution',
+          name: 'Batch Dilution',
           ratio: 0,
           abv: 0,
           densityGPerL: 1000

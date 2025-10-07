@@ -23,7 +23,7 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG }: Re
   const ingredientsWithRatios = calculations.filter(calc => calc.ingredient.ratio > 0);
   const totalIngredientRatio = ingredientsWithRatios.reduce((sum, calc) => sum + calc.ingredient.ratio, 0);
   
-  const batchDilutionVolume = calculations.find(c => c.ingredient.name === 'Batch dilution')?.volumeMl || 0;
+  const batchDilutionVolume = calculations.find(c => c.ingredient.name === 'Batch Dilution')?.volumeMl || 0;
   const dilutionPercent = totalVolumeMl > 0 ? (batchDilutionVolume / totalVolumeMl) * 100 : 0;
   const waterRatio = dilutionPercent > 0 && dilutionPercent < 100
     ? (dilutionPercent / (100 - dilutionPercent)) * totalIngredientRatio
@@ -31,7 +31,7 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG }: Re
   
   // Format ratio string - use exact ratio values as shown in ingredients section
   const formatRatio = (calc: IngredientCalculation): string => {
-    if (calc.ingredient.name === 'Batch dilution') {
+    if (calc.ingredient.name === 'Batch Dilution') {
       if (waterRatio === 0) return '-';
       // Round to 2 decimal places and remove trailing zeros
       return parseFloat(waterRatio.toFixed(2)).toString();

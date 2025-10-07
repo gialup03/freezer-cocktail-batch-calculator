@@ -5,7 +5,7 @@ import { RecipeTemplates } from './RecipeTemplates';
 import { ServingStyleSelector } from './ServingStyleSelector';
 import type { IngredientTemplate } from '../utils/ingredientTemplates';
 import { INGREDIENT_TEMPLATES } from '../utils/ingredientTemplates';
-import type { RecipeTemplate } from '../utils/recipeTemplates';
+import type { RecipeTemplate, PreparationMethod } from '../utils/recipeTemplates';
 
 interface IngredientListProps {
   ingredients: Ingredient[];
@@ -15,6 +15,7 @@ interface IngredientListProps {
   onServingSizeChange?: (servingSize: number) => void;
   servingStyle?: ServingStyle;
   onServingStyleChange?: (style: ServingStyle) => void;
+  onPreparationMethodChange?: (method: PreparationMethod) => void;
 }
 
 export function IngredientList({ 
@@ -24,7 +25,8 @@ export function IngredientList({
   onDilutionChange,
   onServingSizeChange,
   servingStyle = 'up',
-  onServingStyleChange
+  onServingStyleChange,
+  onPreparationMethodChange
 }: IngredientListProps) {
 
   const addIngredient = (name: string = '') => {
@@ -87,6 +89,11 @@ export function IngredientList({
     // Set default serving style if provided
     if (recipe.servingStyle !== undefined && onServingStyleChange) {
       onServingStyleChange(recipe.servingStyle);
+    }
+    
+    // Set default preparation method if provided
+    if (recipe.preparationMethod !== undefined && onPreparationMethodChange) {
+      onPreparationMethodChange(recipe.preparationMethod);
     }
   };
 
