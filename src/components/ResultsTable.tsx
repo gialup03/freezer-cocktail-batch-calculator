@@ -10,7 +10,7 @@ interface ResultsTableProps {
   onBatchSizeChange: (batchSizeMl: number) => void;
 }
 
-export function ResultsTable({ calculations, columnVisibility, totalSugarG, sugarGPerL, batchSizeMl, onBatchSizeChange }: ResultsTableProps) {
+export function ResultsTable({ calculations, columnVisibility, totalSugarG, batchSizeMl, onBatchSizeChange }: ResultsTableProps) {
   if (calculations.length === 0) {
     return null;
   }

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Search, X, Plus } from 'lucide-react';
+import { Search, X, Plus } from 'lucide-react';
 import { 
   INGREDIENT_TEMPLATES, 
   type IngredientTemplate
