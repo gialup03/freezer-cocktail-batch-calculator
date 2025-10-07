@@ -9,6 +9,9 @@ import { ResultsTable } from './components/ResultsTable';
 import { ServingInfo } from './components/ServingInfo';
 
 function App() {
+  // Detect if device is mobile (screen width < 768px is typical mobile breakpoint)
+  const isMobile = () => window.innerWidth < 768;
+  
   const [ingredients, setIngredients] = useState<Ingredient[]>([
     { id: '1', name: 'Gin', ratio: 3, abv: 40, densityGPerL: 940, sugarGPerL: 0 },
     { id: '2', name: 'Dry Vermouth', ratio: 1, abv: 18, densityGPerL: 980, sugarGPerL: 40 },
@@ -16,10 +19,10 @@ function App() {
   const [batchSizeMl, setBatchSizeMl] = useState(750);
   const [dilutionPercent, setDilutionPercent] = useState(5); // Default to Martini's dilution
   const [servingSizeMl, setServingSizeMl] = useState<number | undefined>(undefined);
-  const [columnVisibility, setColumnVisibility] = useState<ColumnVisibility>({
+  const [columnVisibility, setColumnVisibility] = useState<ColumnVisibility>(() => ({
     weight: false,
-    sugar: false
-  });
+    sugar: !isMobile() // Desktop: sugar = true, Mobile: sugar = false
+  }));
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const optionsRef = useRef<HTMLDivElement>(null);
 
@@ -43,7 +46,7 @@ function App() {
           <div className="flex items-center gap-4">
             <img src="/martini.svg" alt="Martini" className="w-10 h-10" />
             <h1 className="text-4xl font-bold text-slate-900">
-              Batch Cocktail Calculator
+              Freezer Batch Cocktail Calculator
             </h1>
           </div>
           <div className="mt-4 relative" ref={optionsRef}>

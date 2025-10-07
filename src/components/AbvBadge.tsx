@@ -6,10 +6,12 @@ interface AbvBadgeProps {
 
 export function AbvBadge({ abv, sugarGPerL, showSugar }: AbvBadgeProps) {
   const getColorClass = () => {
-    if (abv >= 30) {
+    if (abv >= 33) {
       return 'bg-emerald-50 text-emerald-700 border-emerald-200';
-    } else {
+    } else if (abv >= 30) {
       return 'bg-amber-50 text-amber-700 border-amber-200';
+    } else {
+      return 'bg-amber-200 text-amber-900 border-amber-400';
     }
   };
 
@@ -55,10 +57,12 @@ export function AbvBadge({ abv, sugarGPerL, showSugar }: AbvBadgeProps) {
       <div className={`text-center py-6 rounded-lg border-2 ${getColorClass()}`}>
         <div className="text-sm font-medium uppercase tracking-wide mb-1">Final ABV</div>
         <div className="text-5xl font-bold">{abv.toFixed(1)}%</div>
-        {abv >= 30 ? (
+        {abv >= 33 ? (
           <div className="mt-2 text-sm">Optimal freezer range</div>
+        ) : abv >= 30 ? (
+          <div className="mt-2 text-sm">Could result in ice crystals forming based on freezer temperatures</div>
         ) : (
-          <div className="mt-2 text-sm">May result in a slushy texture based on sugar content and freezer temperatures</div>
+          <div className="mt-2 text-sm">May result in solid/slushy texture unless sugar content and/or freezer temperatures are high.</div>
         )}
       </div>
       

@@ -1,8 +1,23 @@
 {
-  "name": "temp_app",
-  "private": true,
-  "version": "0.0.0",
+  "name": "freezer-cocktail-batch-calculator",
+  "private": false,
+  "version": "1.0.0",
   "type": "module",
+  "description": "A calculator for batched freezer cocktails with volume, weight, and ABV calculations",
+  "author": "Gianmarco Luppi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/freezer-cocktail-batch-calculator"
+  },
+  "keywords": [
+    "cocktail",
+    "calculator",
+    "batch",
+    "freezer",
+    "abv",
+    "mixology"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

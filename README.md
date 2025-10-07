@@ -70,8 +70,49 @@ The production-ready files will be in the `dist/` directory.
 
 ## Deployment
 
-The app is configured for deployment on Netlify. Simply connect your repository and it will auto-deploy.
+This app is a static site ready for free deployment on multiple platforms:
+
+### Netlify (Recommended - Already Configured)
+
+1. Push your code to GitHub
+2. Visit [netlify.com](https://netlify.com) and sign up/login
+3. Click "Add new site" → "Import an existing project"
+4. Connect your GitHub repository
+5. Netlify auto-detects the configuration from `netlify.toml`
+6. Click "Deploy" - done!
+
+**Free tier includes:**
+- 100GB bandwidth/month
+- Unlimited personal/commercial projects
+- Continuous deployment
+- Free SSL certificates
+- Custom domains
+
+### Alternative Platforms
+
+**Vercel**
+```bash
+npm install -g vercel
+vercel --prod
+```
+
+**Cloudflare Pages**
+- Connect via GitHub
+- Build command: `npm run build`
+- Output directory: `dist`
+
+**GitHub Pages**
+```bash
+npm run build
+# Push the dist/ folder to gh-pages branch
+```
+
+## Contributing
+
+Contributions welcome! Feel free to open issues or submit pull requests.
 
 ## License
 
-MIT
+MIT License - see [LICENSE](LICENSE) file for details.
+
+This means you can freely use, modify, and distribute this software for any purpose, including commercial use.
