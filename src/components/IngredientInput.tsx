@@ -64,14 +64,18 @@ export function IngredientInput({ ingredient, onChange, onDelete, columnVisibili
       </td>
       
       <td className="px-2 py-1.5 w-[70px] min-w-[70px]">
-        <input
-          type="text"
-          value={isEditingRatio ? ratioDisplayValue : formatRatio(ingredient.ratio)}
-          onChange={(e) => handleRatioChange(e.target.value)}
-          onFocus={handleRatioFocus}
-          onBlur={handleRatioBlur}
-          className="w-full px-2 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
-        />
+        {ingredient.gramsPerPart ? (
+          <div className="w-full px-2 py-1 text-center text-slate-400">—</div>
+        ) : (
+          <input
+            type="text"
+            value={isEditingRatio ? ratioDisplayValue : formatRatio(ingredient.ratio)}
+            onChange={(e) => handleRatioChange(e.target.value)}
+            onFocus={handleRatioFocus}
+            onBlur={handleRatioBlur}
+            className="w-full px-2 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+          />
+        )}
       </td>
       
       <td className="px-2 py-1.5 w-[85px] min-w-[85px]">
@@ -112,6 +116,18 @@ export function IngredientInput({ ingredient, onChange, onDelete, columnVisibili
           />
         </td>
       )}
+      
+      <td className="px-2 py-1.5 w-24 min-w-24">
+        <input
+          type="number"
+          min="0"
+          step="1"
+          value={ingredient.gramsPerPart || ''}
+          onChange={(e) => onChange({ ...ingredient, gramsPerPart: parseFloat(e.target.value) || undefined })}
+          className="w-full px-2 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+          placeholder="—"
+        />
+      </td>
       
       <td className="px-2 py-1.5 text-center w-6 min-w-6">
         <button

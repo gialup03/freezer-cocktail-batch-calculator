@@ -106,6 +106,7 @@ export const RECIPE_TEMPLATES: RecipeTemplate[] = [
       { templateName: 'White Rum', ratio: 2 },
       { templateName: 'Lime Juice', ratio: 1 },
       { templateName: 'Simple Syrup (1:1)', ratio: 0.75 },
+      { templateName: 'Mint Leaves', ratio: 0 }, // ratio not used for weight-based ingredients
       { templateName: 'Soda Water', ratio: 2 },
     ],
     dilutionPercent: 0, // Batch mode - no dilution (contains juice/soda)

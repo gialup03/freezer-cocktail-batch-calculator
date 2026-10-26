@@ -5,6 +5,7 @@ export interface Ingredient {
   abv: number;   // 0-100 (e.g., 40 for 40% ABV)
   densityGPerL: number; // g/L (e.g., 940 for spirits, 1000 for water)
   sugarGPerL?: number; // g/L (e.g., 100 for 100g sugar per liter)
+  gramsPerPart?: number; // For weight-based ingredients: grams per ratio part (e.g., 10g mint per part)
 }
 
 export interface BatchConfig {

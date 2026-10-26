@@ -4,6 +4,7 @@ export interface IngredientTemplate {
   abv: number;
   densityGPerL: number;
   sugarGPerL?: number;
+  gramsPerPart?: number; // For weight-based ingredients
 }
 
 export const INGREDIENT_TEMPLATES: IngredientTemplate[] = [
@@ -84,6 +85,14 @@ export const INGREDIENT_TEMPLATES: IngredientTemplate[] = [
   { name: 'Ginger Beer', category: 'Mixer', abv: 0, densityGPerL: 1040, sugarGPerL: 100 },
   { name: 'Cola', category: 'Mixer', abv: 0, densityGPerL: 1040, sugarGPerL: 105 },
   { name: 'Espresso', category: 'Mixer', abv: 0, densityGPerL: 1000, sugarGPerL: 0 },
+  
+  // Batch Ingredients (measured by weight)
+  // gramsPerPart = grams per ratio part (e.g., if rum is 2 parts and mint is 10g/part, total = 20g for that portion)
+  { name: 'Mint Leaves', category: 'Batch Ingredient', abv: 0, densityGPerL: 1000, sugarGPerL: 0, gramsPerPart: 10 },
+  { name: 'Basil Leaves', category: 'Batch Ingredient', abv: 0, densityGPerL: 1000, sugarGPerL: 0, gramsPerPart: 8 },
+  { name: 'Cucumber', category: 'Batch Ingredient', abv: 0, densityGPerL: 1000, sugarGPerL: 0, gramsPerPart: 15 },
+  { name: 'Ginger', category: 'Batch Ingredient', abv: 0, densityGPerL: 1000, sugarGPerL: 0, gramsPerPart: 5 },
+  { name: 'Jalapeño', category: 'Batch Ingredient', abv: 0, densityGPerL: 1000, sugarGPerL: 0, gramsPerPart: 3 },
 ];
 
 export const INGREDIENT_CATEGORIES = [
@@ -96,6 +105,7 @@ export const INGREDIENT_CATEGORIES = [
   'Juice',
   'Wine & Bubbles',
   'Mixer',
+  'Batch Ingredient',
 ] as const;
 
 export type IngredientCategory = typeof INGREDIENT_CATEGORIES[number];

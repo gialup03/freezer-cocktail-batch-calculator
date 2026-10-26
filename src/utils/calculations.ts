@@ -16,10 +16,14 @@ export function calculateBatch(
     };
   }
 
-  // 1. Normalize ratios to total volume
-  const totalRatio = ingredients.reduce((sum, ing) => sum + ing.ratio, 0);
+  // 1. Separate liquid and weight-based ingredients
+  const liquidIngredients = ingredients.filter(ing => !ing.gramsPerPart);
+  const weightIngredients = ingredients.filter(ing => ing.gramsPerPart);
   
-  if (totalRatio === 0) {
+  // Normalize ratios to total volume (only liquid ingredients)
+  const totalRatio = liquidIngredients.reduce((sum, ing) => sum + ing.ratio, 0);
+  
+  if (totalRatio === 0 && liquidIngredients.length > 0) {
     return {
       ingredients: [],
       finalAbv: 0,
@@ -32,11 +36,12 @@ export function calculateBatch(
   
   // 2. Calculate ABV and sugar g/L based on ratios and dilution (independent of batch size)
   // These are intensive properties - they depend on proportions, not absolute volumes
+  // Note: Only consider liquid ingredients for ABV and sugar calculations
   
-  // Calculate the proportion of each ingredient in the undiluted mix
-  const ingredientProportions = ingredients.map(ing => ({
+  // Calculate the proportion of each liquid ingredient in the undiluted mix
+  const ingredientProportions = liquidIngredients.map(ing => ({
     ingredient: ing,
-    proportion: ing.ratio / totalRatio
+    proportion: totalRatio > 0 ? ing.ratio / totalRatio : 0
   }));
   
   // Calculate weighted average alcohol content (before dilution)
@@ -81,8 +86,9 @@ export function calculateBatch(
     // Ingredients volume is the remainder to reach batch size
     const ingredientsVolumeMl = config.batchSizeMl - waterMl;
     
-    calculations = ingredients.map(ing => {
-      const volumeMl = (ing.ratio / totalRatio) * ingredientsVolumeMl;
+    // Calculate liquid ingredients
+    const liquidCalculations = liquidIngredients.map(ing => {
+      const volumeMl = totalRatio > 0 ? (ing.ratio / totalRatio) * ingredientsVolumeMl : 0;
       const volumeOz = volumeMl * 0.033814;
       const weightG = volumeMl * (ing.densityGPerL / 1000);
       const sugarG = ing.sugarGPerL ? (volumeMl / 1000) * ing.sugarGPerL : undefined;
@@ -95,6 +101,22 @@ export function calculateBatch(
         sugarG: sugarG !== undefined ? Math.round(sugarG * 10) / 10 : undefined
       };
     });
+    
+    // Calculate weight-based ingredients
+    const weightCalculations = weightIngredients.map(ing => {
+      // Total weight = gramsPerPart × total ratio of liquid ingredients
+      const weightG = ing.gramsPerPart! * totalRatio;
+      
+      return {
+        ingredient: ing,
+        volumeMl: 0, // Weight-based ingredients don't have meaningful volume
+        volumeOz: 0,
+        weightG: Math.round(weightG * 10) / 10,
+        sugarG: undefined
+      };
+    });
+    
+    calculations = [...liquidCalculations, ...weightCalculations];
     
     totalSugarG = calculations.reduce((sum, calc) => sum + (calc.sugarG || 0), 0);
     

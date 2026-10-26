@@ -44,10 +44,11 @@ export function IngredientList({
     const newIngredient: Ingredient = {
       id: Date.now().toString(),
       name: template.name,
-      ratio: ratio,
+      ratio: template.gramsPerPart ? 0 : ratio, // ratio is 0 for weight-based ingredients
       abv: template.abv,
       densityGPerL: template.densityGPerL,
-      sugarGPerL: template.sugarGPerL
+      sugarGPerL: template.sugarGPerL,
+      gramsPerPart: template.gramsPerPart
     };
     onChange([...ingredients, newIngredient]);
   };
@@ -71,7 +72,8 @@ export function IngredientList({
         ratio: recipeIngredient.ratio,
         abv: template.abv,
         densityGPerL: template.densityGPerL,
-        sugarGPerL: template.sugarGPerL
+        sugarGPerL: template.sugarGPerL,
+        gramsPerPart: template.gramsPerPart
       };
     });
     onChange(newIngredients);
@@ -148,6 +150,9 @@ export function IngredientList({
                       Sugar (g/L)
                     </th>
                   )}
+                  <th className="px-2 py-1.5 text-left text-sm font-semibold text-slate-700 w-24 min-w-24">
+                    g/part
+                  </th>
                   <th className="px-2 py-1.5 w-6 min-w-6"></th>
                 </tr>
               </thead>

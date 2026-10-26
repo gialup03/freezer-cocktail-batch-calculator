@@ -36,6 +36,9 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG }: Re
       // Round to 2 decimal places and remove trailing zeros
       return parseFloat(waterRatio.toFixed(2)).toString();
     }
+    if (calc.ingredient.gramsPerPart) {
+      return '—'; // Weight-based ingredients don't have meaningful ratios
+    }
     if (calc.ingredient.ratio === 0) {
       return '-';
     }
@@ -71,12 +74,27 @@ export function ResultsTable({ calculations, columnVisibility, totalSugarG }: Re
               key={calc.ingredient.id}
               className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}
             >
-              <td className="px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{calc.ingredient.name || 'Unnamed'}</td>
+              <td className="px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">
+                {calc.ingredient.name || 'Unnamed'}
+                {calc.ingredient.gramsPerPart && (
+                  <span className="text-slate-500 text-xs ml-1">(by weight)</span>
+                )}
+              </td>
               <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{formatRatio(calc)}</td>
-              <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{calc.volumeMl.toFixed(0)}</td>
-              <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{formatOzAsFraction(calc.volumeOz)}</td>
+              <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">
+                {calc.ingredient.gramsPerPart ? '—' : calc.volumeMl.toFixed(0)}
+              </td>
+              <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">
+                {calc.ingredient.gramsPerPart ? '—' : formatOzAsFraction(calc.volumeOz)}
+              </td>
               {columnVisibility.weight && (
-                <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">{calc.weightG.toFixed(0)}</td>
+                <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">
+                  {calc.ingredient.gramsPerPart ? (
+                    <span className="font-semibold">{calc.weightG.toFixed(0)}g</span>
+                  ) : (
+                    calc.weightG.toFixed(0)
+                  )}
+                </td>
               )}
               {columnVisibility.sugar && (
                 <td className="text-right px-1.5 sm:px-2 py-1 sm:py-1.5 border-b border-slate-200">
